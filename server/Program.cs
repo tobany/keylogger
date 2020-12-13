@@ -4,7 +4,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Net;
  
-namespace MonoMyFirstNancy
+namespace KeyLogger
 {
     class MainClass
     {
@@ -25,10 +25,10 @@ namespace MonoMyFirstNancy
                     HttpListenerContext ctx = http.GetContext();
                     HttpListenerRequest rqst = ctx.Request;
                     Console.WriteLine(rqst.Url.OriginalString);
+                    Console.WriteLine(rqst.Headers);
                 }
             });
- 
-            Console.WriteLine("Press Ctrl + C to cancel!");
+            
             Console.CancelKeyPress += ((s, a) =>
             {
                 Console.WriteLine("Bye!");
