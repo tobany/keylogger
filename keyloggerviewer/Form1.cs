@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using Google.Protobuf.WellKnownTypes;
 using Org.BouncyCastle.Crypto.Agreement.Srp;
 
 namespace keyloggerviewer
@@ -43,6 +44,16 @@ namespace keyloggerviewer
             dataGridView1.DataSource = logs;
             ascendSort = true;
             sortedColumn = "HostName";
+            dtpStartTime.Format = DateTimePickerFormat.Time;
+            dtpStartTime.ShowUpDown = true;
+            dtpEndTime.Format = DateTimePickerFormat.Time;
+            dtpEndTime.ShowUpDown = true;
+            dtpStartDate.Format = DateTimePickerFormat.Short;
+            dtpEndDate.Format = DateTimePickerFormat.Short;
+            dtpStartTime.Enabled = false;
+            dtpEndTime.Enabled = false;
+            dtpStartDate.Enabled = false;
+            dtpEndDate.Enabled = false;
         }
 
         private void bValidate_Click(object sender, EventArgs e)
@@ -54,6 +65,21 @@ namespace keyloggerviewer
             string regex = tbRegex.Text;
             string logType = cbType.SelectedItem.ToString();
             string hostName = cbHost.SelectedItem.ToString();
+            string startDate = "";
+            string endDate = "";
+            string startTime = "";
+            string endTime = "";
+            if (cbTime.Checked)
+            {
+                startTime = dtpStartTime.Text;
+                endTime = dtpEndTime.Text;
+            }
+            if (cbDate.Checked)
+            {
+                startDate = dtpStartDate.Value.ToString("yyyy-MM-dd");
+                endDate = dtpEndDate.Value.ToString("yyyy-MM-dd");
+            }
+
             if (hostName == "Tous")
             {
                 hostName = "";
@@ -65,13 +91,15 @@ namespace keyloggerviewer
             }
             
             this.logs = db.simpleGet(hostName: hostName, type: logType, regex: regex, lineAfter: nbLineAfter,
-                lineBefore: nbLineBefore, contentMaxLen: contentMaxLen, contentMinLen: contentMinLen);
+                lineBefore: nbLineBefore, contentMaxLen: contentMaxLen, contentMinLen: contentMinLen, endDate: endDate,
+                startDate: startDate, endTime: endTime, startTime: startTime);
             List<LogData> ld = this.logs.OrderBy(o => o.HostName).ThenBy(o => o.LogId).ToList();;
             dataGridView1.DataSource = ld;
             dataGridView1.Update();
             dataGridView1.Refresh();
             sortedColumn = "HostName";
             dataGridView1.Columns[1].HeaderCell.SortGlyphDirection = SortOrder.Ascending;
+            
             
             
 
@@ -182,6 +210,33 @@ namespace keyloggerviewer
             // Sort the selected column.
             //dataGridView1.Sort(newColumn, direction);
         }
-        
+
+        private void cbTime_CheckedChanged(object sender, EventArgs e)
+        {
+            if (cbTime.Checked)
+            {
+                dtpStartTime.Enabled = true;
+                dtpEndTime.Enabled = true;
+            }
+            else
+            {
+                dtpStartTime.Enabled = false;
+                dtpEndTime.Enabled = false;
+            }
+        }
+
+        private void cbDate_CheckedChanged(object sender, EventArgs e)
+        {
+            if (cbDate.Checked)
+            {
+                dtpStartDate.Enabled = true;
+                dtpEndDate.Enabled = true;
+            }
+            else
+            {
+                dtpStartDate.Enabled = false;
+                dtpEndDate.Enabled = false;
+            }
+        }
     }
 }
