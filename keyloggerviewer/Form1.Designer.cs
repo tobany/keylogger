@@ -51,31 +51,37 @@
             this.dtpEndDate = new System.Windows.Forms.DateTimePicker();
             this.cbTime = new System.Windows.Forms.CheckBox();
             this.cbDate = new System.Windows.Forms.CheckBox();
+            this.menuStrip1 = new System.Windows.Forms.MenuStrip();
+            this.fichierToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.exporterToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
+            this.xMLToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize) (this.nudBefore)).BeginInit();
             ((System.ComponentModel.ISupportInitialize) (this.nudMaxLen)).BeginInit();
             ((System.ComponentModel.ISupportInitialize) (this.nudMinLen)).BeginInit();
             ((System.ComponentModel.ISupportInitialize) (this.nudAfter)).BeginInit();
             ((System.ComponentModel.ISupportInitialize) (this.dataGridView1)).BeginInit();
+            this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
             // cbHost
             // 
             this.cbHost.FormattingEnabled = true;
-            this.cbHost.Location = new System.Drawing.Point(86, 33);
+            this.cbHost.Location = new System.Drawing.Point(89, 66);
             this.cbHost.Name = "cbHost";
             this.cbHost.Size = new System.Drawing.Size(134, 21);
             this.cbHost.TabIndex = 0;
             // 
             // dtpStartTime
             // 
-            this.dtpStartTime.Location = new System.Drawing.Point(260, 29);
+            this.dtpStartTime.Location = new System.Drawing.Point(263, 62);
             this.dtpStartTime.Name = "dtpStartTime";
             this.dtpStartTime.Size = new System.Drawing.Size(143, 20);
             this.dtpStartTime.TabIndex = 1;
             // 
             // dtpEndTime
             // 
-            this.dtpEndTime.Location = new System.Drawing.Point(260, 64);
+            this.dtpEndTime.Location = new System.Drawing.Point(263, 97);
             this.dtpEndTime.Name = "dtpEndTime";
             this.dtpEndTime.Size = new System.Drawing.Size(143, 20);
             this.dtpEndTime.TabIndex = 2;
@@ -84,21 +90,21 @@
             // 
             this.cbType.DisplayMember = "Test";
             this.cbType.FormattingEnabled = true;
-            this.cbType.Location = new System.Drawing.Point(88, 122);
+            this.cbType.Location = new System.Drawing.Point(91, 155);
             this.cbType.Name = "cbType";
             this.cbType.Size = new System.Drawing.Size(131, 21);
             this.cbType.TabIndex = 5;
             // 
             // tbRegex
             // 
-            this.tbRegex.Location = new System.Drawing.Point(595, 124);
+            this.tbRegex.Location = new System.Drawing.Point(598, 157);
             this.tbRegex.Name = "tbRegex";
             this.tbRegex.Size = new System.Drawing.Size(241, 20);
             this.tbRegex.TabIndex = 8;
             // 
             // bValidate
             // 
-            this.bValidate.Location = new System.Drawing.Point(660, 159);
+            this.bValidate.Location = new System.Drawing.Point(663, 192);
             this.bValidate.Name = "bValidate";
             this.bValidate.Size = new System.Drawing.Size(174, 33);
             this.bValidate.TabIndex = 10;
@@ -108,7 +114,7 @@
             // 
             // lblHost
             // 
-            this.lblHost.Location = new System.Drawing.Point(92, 9);
+            this.lblHost.Location = new System.Drawing.Point(95, 42);
             this.lblHost.Name = "lblHost";
             this.lblHost.Size = new System.Drawing.Size(126, 24);
             this.lblHost.TabIndex = 11;
@@ -116,7 +122,7 @@
             // 
             // lblLineBefore
             // 
-            this.lblLineBefore.Location = new System.Drawing.Point(595, -2);
+            this.lblLineBefore.Location = new System.Drawing.Point(598, 31);
             this.lblLineBefore.Name = "lblLineBefore";
             this.lblLineBefore.Size = new System.Drawing.Size(126, 33);
             this.lblLineBefore.TabIndex = 14;
@@ -124,7 +130,7 @@
             // 
             // lblLineAfter
             // 
-            this.lblLineAfter.Location = new System.Drawing.Point(737, -2);
+            this.lblLineAfter.Location = new System.Drawing.Point(740, 31);
             this.lblLineAfter.Name = "lblLineAfter";
             this.lblLineAfter.Size = new System.Drawing.Size(126, 33);
             this.lblLineAfter.TabIndex = 15;
@@ -132,7 +138,7 @@
             // 
             // lblType
             // 
-            this.lblType.Location = new System.Drawing.Point(88, 95);
+            this.lblType.Location = new System.Drawing.Point(91, 128);
             this.lblType.Name = "lblType";
             this.lblType.Size = new System.Drawing.Size(126, 24);
             this.lblType.TabIndex = 16;
@@ -140,7 +146,7 @@
             // 
             // lblMinLen
             // 
-            this.lblMinLen.Location = new System.Drawing.Point(264, 96);
+            this.lblMinLen.Location = new System.Drawing.Point(267, 129);
             this.lblMinLen.Name = "lblMinLen";
             this.lblMinLen.Size = new System.Drawing.Size(126, 24);
             this.lblMinLen.TabIndex = 17;
@@ -148,7 +154,7 @@
             // 
             // lblMaxLen
             // 
-            this.lblMaxLen.Location = new System.Drawing.Point(444, 95);
+            this.lblMaxLen.Location = new System.Drawing.Point(447, 128);
             this.lblMaxLen.Name = "lblMaxLen";
             this.lblMaxLen.Size = new System.Drawing.Size(126, 24);
             this.lblMaxLen.TabIndex = 18;
@@ -156,7 +162,7 @@
             // 
             // lblRegex
             // 
-            this.lblRegex.Location = new System.Drawing.Point(595, 95);
+            this.lblRegex.Location = new System.Drawing.Point(598, 128);
             this.lblRegex.Name = "lblRegex";
             this.lblRegex.Size = new System.Drawing.Size(126, 24);
             this.lblRegex.TabIndex = 19;
@@ -164,7 +170,7 @@
             // 
             // nudBefore
             // 
-            this.nudBefore.Location = new System.Drawing.Point(595, 33);
+            this.nudBefore.Location = new System.Drawing.Point(598, 66);
             this.nudBefore.Maximum = new decimal(new int[] {10, 0, 0, 0});
             this.nudBefore.Name = "nudBefore";
             this.nudBefore.Size = new System.Drawing.Size(94, 20);
@@ -172,7 +178,7 @@
             // 
             // nudMaxLen
             // 
-            this.nudMaxLen.Location = new System.Drawing.Point(444, 122);
+            this.nudMaxLen.Location = new System.Drawing.Point(447, 155);
             this.nudMaxLen.Maximum = new decimal(new int[] {1000, 0, 0, 0});
             this.nudMaxLen.Name = "nudMaxLen";
             this.nudMaxLen.Size = new System.Drawing.Size(94, 20);
@@ -181,7 +187,7 @@
             // 
             // nudMinLen
             // 
-            this.nudMinLen.Location = new System.Drawing.Point(260, 124);
+            this.nudMinLen.Location = new System.Drawing.Point(263, 157);
             this.nudMinLen.Maximum = new decimal(new int[] {1000, 0, 0, 0});
             this.nudMinLen.Name = "nudMinLen";
             this.nudMinLen.Size = new System.Drawing.Size(94, 20);
@@ -189,7 +195,7 @@
             // 
             // nudAfter
             // 
-            this.nudAfter.Location = new System.Drawing.Point(742, 33);
+            this.nudAfter.Location = new System.Drawing.Point(745, 66);
             this.nudAfter.Maximum = new decimal(new int[] {10, 0, 0, 0});
             this.nudAfter.Name = "nudAfter";
             this.nudAfter.Size = new System.Drawing.Size(94, 20);
@@ -203,26 +209,26 @@
             this.dataGridView1.Location = new System.Drawing.Point(86, 231);
             this.dataGridView1.Name = "dataGridView1";
             this.dataGridView1.ReadOnly = true;
-            this.dataGridView1.Size = new System.Drawing.Size(747, 390);
+            this.dataGridView1.Size = new System.Drawing.Size(747, 506);
             this.dataGridView1.TabIndex = 24;
             // 
             // dtpStartDate
             // 
-            this.dtpStartDate.Location = new System.Drawing.Point(444, 29);
+            this.dtpStartDate.Location = new System.Drawing.Point(447, 62);
             this.dtpStartDate.Name = "dtpStartDate";
             this.dtpStartDate.Size = new System.Drawing.Size(126, 20);
             this.dtpStartDate.TabIndex = 25;
             // 
             // dtpEndDate
             // 
-            this.dtpEndDate.Location = new System.Drawing.Point(444, 64);
+            this.dtpEndDate.Location = new System.Drawing.Point(447, 97);
             this.dtpEndDate.Name = "dtpEndDate";
             this.dtpEndDate.Size = new System.Drawing.Size(126, 20);
             this.dtpEndDate.TabIndex = 26;
             // 
             // cbTime
             // 
-            this.cbTime.Location = new System.Drawing.Point(260, -1);
+            this.cbTime.Location = new System.Drawing.Point(263, 32);
             this.cbTime.Name = "cbTime";
             this.cbTime.Size = new System.Drawing.Size(160, 27);
             this.cbTime.TabIndex = 27;
@@ -232,7 +238,7 @@
             // 
             // cbDate
             // 
-            this.cbDate.Location = new System.Drawing.Point(444, 4);
+            this.cbDate.Location = new System.Drawing.Point(447, 37);
             this.cbDate.Name = "cbDate";
             this.cbDate.Size = new System.Drawing.Size(125, 22);
             this.cbDate.TabIndex = 28;
@@ -240,11 +246,41 @@
             this.cbDate.UseVisualStyleBackColor = true;
             this.cbDate.CheckedChanged += new System.EventHandler(this.cbDate_CheckedChanged);
             // 
+            // menuStrip1
+            // 
+            this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {this.fichierToolStripMenuItem});
+            this.menuStrip1.Location = new System.Drawing.Point(0, 0);
+            this.menuStrip1.Name = "menuStrip1";
+            this.menuStrip1.Size = new System.Drawing.Size(940, 24);
+            this.menuStrip1.TabIndex = 29;
+            this.menuStrip1.Text = "menuStrip1";
+            // 
+            // fichierToolStripMenuItem
+            // 
+            this.fichierToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {this.exporterToolStripMenuItem, this.xMLToolStripMenuItem});
+            this.fichierToolStripMenuItem.Name = "fichierToolStripMenuItem";
+            this.fichierToolStripMenuItem.Size = new System.Drawing.Size(54, 20);
+            this.fichierToolStripMenuItem.Text = "Fichier";
+            // 
+            // exporterToolStripMenuItem
+            // 
+            this.exporterToolStripMenuItem.Name = "exporterToolStripMenuItem";
+            this.exporterToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.exporterToolStripMenuItem.Text = "Exporter";
+            this.exporterToolStripMenuItem.Click += new System.EventHandler(this.exporterToolStripMenuItem_Click);
+            // 
+            // xMLToolStripMenuItem
+            // 
+            this.xMLToolStripMenuItem.Name = "xMLToolStripMenuItem";
+            this.xMLToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.xMLToolStripMenuItem.Text = "XML";
+            this.xMLToolStripMenuItem.Click += new System.EventHandler(this.xMLToolStripMenuItem_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(940, 646);
+            this.ClientSize = new System.Drawing.Size(940, 762);
             this.Controls.Add(this.cbDate);
             this.Controls.Add(this.cbTime);
             this.Controls.Add(this.dtpEndDate);
@@ -267,6 +303,8 @@
             this.Controls.Add(this.dtpEndTime);
             this.Controls.Add(this.dtpStartTime);
             this.Controls.Add(this.cbHost);
+            this.Controls.Add(this.menuStrip1);
+            this.MainMenuStrip = this.menuStrip1;
             this.Name = "Form1";
             this.Text = "Form1";
             ((System.ComponentModel.ISupportInitialize) (this.nudBefore)).EndInit();
@@ -274,9 +312,18 @@
             ((System.ComponentModel.ISupportInitialize) (this.nudMinLen)).EndInit();
             ((System.ComponentModel.ISupportInitialize) (this.nudAfter)).EndInit();
             ((System.ComponentModel.ISupportInitialize) (this.dataGridView1)).EndInit();
+            this.menuStrip1.ResumeLayout(false);
+            this.menuStrip1.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
         }
+
+        private System.Windows.Forms.ToolStripMenuItem xMLToolStripMenuItem;
+
+        private System.Windows.Forms.ToolStripMenuItem exporterToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem fichierToolStripMenuItem;
+        private System.Windows.Forms.MenuStrip menuStrip1;
+        private System.Windows.Forms.SaveFileDialog saveFileDialog1;
 
         private System.Windows.Forms.CheckBox cbDate;
         private System.Windows.Forms.CheckBox cbTime;

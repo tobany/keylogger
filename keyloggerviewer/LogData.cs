@@ -2,6 +2,7 @@
 
 namespace keyloggerviewer
 {
+    [Serializable]
     public class LogData
     {
         private string hostName;
@@ -67,8 +68,8 @@ namespace keyloggerviewer
 
         public override string ToString()
         {
-            return this.hostName + " -- " + this.publicIp + " -- " + this.privateIp + " -- " + this.date + " -- " + this.logId +
-                   " -- " + this.type + " -- " + this.content;
+            return this.hostName + ", " + this.logId + ", " + this.publicIp + ", " + this.privateIp + ", " + this.date +
+                   ", " + this.type + ", " + this.content;
         }
     }
 }

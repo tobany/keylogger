@@ -3,10 +3,12 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Xml.Serialization;
 using Google.Protobuf.WellKnownTypes;
 using Org.BouncyCastle.Crypto.Agreement.Srp;
 
@@ -237,6 +239,50 @@ namespace keyloggerviewer
                 dtpStartDate.Enabled = false;
                 dtpEndDate.Enabled = false;
             }
+        }
+
+        private void exporterToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (this.logs.Count > 0)
+            {
+                saveFileDialog1.Filter = "txt files (*.txt)|*.txt|All files (*.*)|*.*";
+                saveFileDialog1.FilterIndex = 2;
+                saveFileDialog1.RestoreDirectory = true;
+
+                if (saveFileDialog1.ShowDialog() == DialogResult.OK)
+                {
+                    if (saveFileDialog1.FileName != null)
+                    {
+                        StreamWriter sw = new StreamWriter(saveFileDialog1.FileName);
+                        sw.WriteLine("HostName, LogId, PrivateIp, PublicIp, Date, Type, Content");
+                        foreach (LogData log in logs)
+                        {
+                            sw.WriteLine(log.ToString());
+                        }
+
+                        sw.Dispose();
+                    }
+                }
+                saveFileDialog1.Dispose();
+            }
+        }
+
+        private void xMLToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            // saveFileDialog1.Filter = "xml files (*.xml)|*.xml|All files (*.*)|*.*";
+            // saveFileDialog1.FilterIndex = 2;
+            // saveFileDialog1.RestoreDirectory = true;
+            //
+            // if (saveFileDialog1.ShowDialog() == DialogResult.OK)
+            // {
+            //     if (saveFileDialog1.FileName != null)
+            //     {
+            //         XmlSerializer serializer = new XmlSerializer(logs.GetType(), logs); 
+            //         FileStream fs = new FileStream("Personenliste.xml", FileMode.Create); 
+            //         serializer.Serialize(fs, logs);
+            //         fs.Close();
+            //     }
+            // }
         }
     }
 }
