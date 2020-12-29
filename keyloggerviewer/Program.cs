@@ -11,6 +11,7 @@ namespace keyloggerviewer
 {
     static class Program
     {
+        public static DbLink connection;
         /// <summary>
         ///  The main entry point for the application.
         /// </summary>
@@ -20,7 +21,8 @@ namespace keyloggerviewer
             Application.SetHighDpiMode(HighDpiMode.SystemAware);
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            DbLink connection = new DbLink();
+            connection = new DbLink();
+            DataAdd.ConnectionServer();
             Application.Run(new Form1(connection));
 
         }

