@@ -13,10 +13,12 @@ namespace keyloggerviewer
     {
         private MySqlConnection connection;
 
-        public DbLink()
+        public DbLink(string server, string user, string password, string dbName, string port)
         {
-            string connStr = "server=localhost;user=keylogger;database=keylogger;port=3306;password=keylogger";
+            string connStr = "server=" + server + ";user=" + user + ";database=" + dbName + ";port=" + port + ";password=" + password;
             this.connection = new MySqlConnection(connStr);
+            this.connection.Open();
+            this.connection.Close();
         }
 
         public List<LogData> simpleGet(string hostName = "", string hostPublicIp = "", string hostPrivateIp = "",

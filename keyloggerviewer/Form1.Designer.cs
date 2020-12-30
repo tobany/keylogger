@@ -54,8 +54,9 @@
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.fichierToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.exporterToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
             this.xMLToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
+            this.chargerDepuisDtpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize) (this.nudBefore)).BeginInit();
             ((System.ComponentModel.ISupportInitialize) (this.nudMaxLen)).BeginInit();
             ((System.ComponentModel.ISupportInitialize) (this.nudMinLen)).BeginInit();
@@ -257,7 +258,7 @@
             // 
             // fichierToolStripMenuItem
             // 
-            this.fichierToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {this.exporterToolStripMenuItem, this.xMLToolStripMenuItem});
+            this.fichierToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {this.exporterToolStripMenuItem, this.xMLToolStripMenuItem, this.chargerDepuisDtpToolStripMenuItem});
             this.fichierToolStripMenuItem.Name = "fichierToolStripMenuItem";
             this.fichierToolStripMenuItem.Size = new System.Drawing.Size(54, 20);
             this.fichierToolStripMenuItem.Text = "Fichier";
@@ -265,16 +266,23 @@
             // exporterToolStripMenuItem
             // 
             this.exporterToolStripMenuItem.Name = "exporterToolStripMenuItem";
-            this.exporterToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.exporterToolStripMenuItem.Size = new System.Drawing.Size(172, 22);
             this.exporterToolStripMenuItem.Text = "Exporter";
             this.exporterToolStripMenuItem.Click += new System.EventHandler(this.exporterToolStripMenuItem_Click);
             // 
             // xMLToolStripMenuItem
             // 
             this.xMLToolStripMenuItem.Name = "xMLToolStripMenuItem";
-            this.xMLToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.xMLToolStripMenuItem.Size = new System.Drawing.Size(172, 22);
             this.xMLToolStripMenuItem.Text = "XML";
             this.xMLToolStripMenuItem.Click += new System.EventHandler(this.xMLToolStripMenuItem_Click);
+            // 
+            // chargerDepuisDtpToolStripMenuItem
+            // 
+            this.chargerDepuisDtpToolStripMenuItem.Name = "chargerDepuisDtpToolStripMenuItem";
+            this.chargerDepuisDtpToolStripMenuItem.Size = new System.Drawing.Size(172, 22);
+            this.chargerDepuisDtpToolStripMenuItem.Text = "Charger depuis ftp";
+            this.chargerDepuisDtpToolStripMenuItem.Click += new System.EventHandler(this.chargerDepuisDtpToolStripMenuItem_Click);
             // 
             // Form1
             // 
@@ -317,6 +325,8 @@
             this.ResumeLayout(false);
             this.PerformLayout();
         }
+
+        private System.Windows.Forms.ToolStripMenuItem chargerDepuisDtpToolStripMenuItem;
 
         private System.Windows.Forms.ToolStripMenuItem xMLToolStripMenuItem;
 

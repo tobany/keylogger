@@ -20,10 +20,33 @@ namespace keyloggerviewer
         private List<LogData> logs;
         private string sortedColumn;
         private bool ascendSort;
-        public Form1(DbLink connection)
+        public Form1()
         {
             InitializeComponent();
-            this.db = connection;
+            var a = new DbConnection();
+            a.ShowDialog(); 
+            while (Program.connection is null)
+            {
+                string message = "Une base de donnée mySQL est requise pour cette application.\n Voulez vous quitter ?";
+                string caption = "Erreur connexion mysql";
+                MessageBoxButtons buttons = MessageBoxButtons.YesNo;
+                DialogResult result;
+
+                // Displays the MessageBox.
+                result = MessageBox.Show(message, caption, buttons);
+                if (result == System.Windows.Forms.DialogResult.Yes)
+                {
+                    // Closes the parent form.
+                    Application.Exit();
+                    this.Close();
+                    return;
+                }
+                else
+                {
+                    a.ShowDialog(); 
+                }
+            }
+            this.db = Program.connection;
             List<string> names = db.getHostList();
             cbHost.Items.Add("Tous");
             foreach (string name in names)
@@ -283,6 +306,11 @@ namespace keyloggerviewer
             //         fs.Close();
             //     }
             // }
+        }
+
+        private void chargerDepuisDtpToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            DataAdd.ConnectionServer();
         }
     }
 }

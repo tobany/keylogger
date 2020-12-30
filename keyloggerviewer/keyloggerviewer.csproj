@@ -10,4 +10,10 @@
       <PackageReference Include="MySql.Data" Version="8.0.22" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Compile Update="DbConnection.cs">
+        <SubType>Form</SubType>
+      </Compile>
+    </ItemGroup>
+
 </Project>
