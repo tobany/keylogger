@@ -212,6 +212,7 @@
             this.dataGridView1.ReadOnly = true;
             this.dataGridView1.Size = new System.Drawing.Size(747, 506);
             this.dataGridView1.TabIndex = 24;
+            this.dataGridView1.ColumnHeaderMouseClick += dataGridView1_ColumnHeaderMouseClick;
             // 
             // dtpStartDate
             // 
@@ -275,7 +276,6 @@
             this.xMLToolStripMenuItem.Name = "xMLToolStripMenuItem";
             this.xMLToolStripMenuItem.Size = new System.Drawing.Size(172, 22);
             this.xMLToolStripMenuItem.Text = "XML";
-            this.xMLToolStripMenuItem.Click += new System.EventHandler(this.xMLToolStripMenuItem_Click);
             // 
             // chargerDepuisDtpToolStripMenuItem
             // 

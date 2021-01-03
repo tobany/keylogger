@@ -23,8 +23,10 @@ namespace keyloggerviewer
         public Form1()
         {
             InitializeComponent();
-            var a = new DbConnection();
-            a.ShowDialog(); 
+            //Creation de la fenêtre pour récupérer les informations de connexion sql
+            DbConnection dbWindow = new DbConnection();
+            dbWindow.ShowDialog(); 
+            //Si jamais l'utilisateur ferme la fenêtre sans valider, on vérifie qu'il veut bien quitter, si c'est le cas, on arrête l'application.
             while (Program.connection is null)
             {
                 string message = "Une base de donnée mySQL est requise pour cette application.\n Voulez vous quitter ?";
@@ -43,10 +45,11 @@ namespace keyloggerviewer
                 }
                 else
                 {
-                    a.ShowDialog(); 
+                    dbWindow.ShowDialog();
                 }
             }
             this.db = Program.connection;
+            //On récupère la liste des poste présent sur la base de donnée pour les mettre dans la liste déroulante
             List<string> names = db.getHostList();
             cbHost.Items.Add("Tous");
             foreach (string name in names)
@@ -56,7 +59,7 @@ namespace keyloggerviewer
 
             cbHost.SelectedIndex = 0;
             cbHost.DropDownStyle = ComboBoxStyle.DropDownList;
-
+            //On configure chacun des différent champs pour sélectionner les données.
             cbType.Items.Add(("Tous"));
             cbType.Items.Add(("text"));
             cbType.Items.Add(("copy"));
@@ -83,6 +86,8 @@ namespace keyloggerviewer
 
         private void bValidate_Click(object sender, EventArgs e)
         {
+            //Fonction appelé lors de la validation.
+            //On récupère toutes les valeurs qui seront utilisées pour la requète sql.
             int nbLineAfter = Convert.ToInt32(nudAfter.Value);
             int nbLineBefore = Convert.ToInt32(nudBefore.Value);
             int contentMaxLen = Convert.ToInt32(nudMaxLen.Value);
@@ -114,7 +119,7 @@ namespace keyloggerviewer
             {
                 logType = "";
             }
-            
+            //On execute la requête et on insère dans la datagridview les valeurs récupérées
             this.logs = db.simpleGet(hostName: hostName, type: logType, regex: regex, lineAfter: nbLineAfter,
                 lineBefore: nbLineBefore, contentMaxLen: contentMaxLen, contentMinLen: contentMinLen, endDate: endDate,
                 startDate: startDate, endTime: endTime, startTime: startTime);
@@ -133,15 +138,16 @@ namespace keyloggerviewer
 
         private void dataGridView1_ColumnHeaderMouseClick(
             object sender, DataGridViewCellMouseEventArgs e)
+        // Fonction permettant de trier les données selon certaines colonnes lors du click sur les en tête de colonnes.
         {
             List<LogData> ld = this.logs;
             DataGridViewColumn newColumn = dataGridView1.Columns[e.ColumnIndex];
             DataGridViewColumn oldColumn = dataGridView1.Columns[this.sortedColumn];
             string head = newColumn.HeaderText;
             bool ok = false;
+            // Si la colonne est déjà trié, on change l'ordre de tri
             if (head == this.sortedColumn && ascendSort)
             {
-                Console.WriteLine("NOPE");
                 switch (head)
                 {
                     case "LogId":
@@ -163,13 +169,11 @@ namespace keyloggerviewer
                         ok = true;
                         break;
                 }
-
                 ascendSort = false;
                 newColumn.HeaderCell.SortGlyphDirection = SortOrder.Descending;
             }
             else
             {
-                Console.WriteLine("OKK");
                 switch (head)
                 {
                     case "LogId":
@@ -210,30 +214,6 @@ namespace keyloggerviewer
                     dataGridView1.Columns[head].HeaderCell.SortGlyphDirection = SortOrder.Descending;
                 sortedColumn = head;
             }
-/*
-            // If oldColumn is null, then the DataGridView is not sorted.
-            if (oldColumn != null)
-            {
-                // Sort the same column again, reversing the SortOrder.
-                if (oldColumn == newColumn &&
-                    dataGridView1.SortOrder == SortOrder.Ascending)
-                {
-                    direction = ListSortDirection.Descending;
-                }
-                else
-                {
-                    // Sort a new column and remove the old SortGlyph.
-                    direction = ListSortDirection.Ascending;
-                    oldColumn.HeaderCell.SortGlyphDirection = SortOrder.None;
-                }
-            }
-            else
-            {
-                direction = ListSortDirection.Ascending;
-            }
-*/
-            // Sort the selected column.
-            //dataGridView1.Sort(newColumn, direction);
         }
 
         private void cbTime_CheckedChanged(object sender, EventArgs e)
@@ -265,6 +245,7 @@ namespace keyloggerviewer
         }
 
         private void exporterToolStripMenuItem_Click(object sender, EventArgs e)
+        // Fonction permettant d'exporter les données afficher dans un fichier texte.
         {
             if (this.logs.Count > 0)
             {
@@ -290,27 +271,12 @@ namespace keyloggerviewer
             }
         }
 
-        private void xMLToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            // saveFileDialog1.Filter = "xml files (*.xml)|*.xml|All files (*.*)|*.*";
-            // saveFileDialog1.FilterIndex = 2;
-            // saveFileDialog1.RestoreDirectory = true;
-            //
-            // if (saveFileDialog1.ShowDialog() == DialogResult.OK)
-            // {
-            //     if (saveFileDialog1.FileName != null)
-            //     {
-            //         XmlSerializer serializer = new XmlSerializer(logs.GetType(), logs); 
-            //         FileStream fs = new FileStream("Personenliste.xml", FileMode.Create); 
-            //         serializer.Serialize(fs, logs);
-            //         fs.Close();
-            //     }
-            // }
-        }
-
         private void chargerDepuisDtpToolStripMenuItem_Click(object sender, EventArgs e)
+        // Foncction pour charger les données depuis le server ftp.
         {
-            DataAdd.ConnectionServer();
+            FtpConnection ftpWindow = new FtpConnection();
+            
+            ftpWindow.ShowDialog(); 
         }
     }
 }

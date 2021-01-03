@@ -11,9 +11,24 @@ namespace keyloggerviewer
 {
     public class DbLink
     {
+        // Classe gérant la connexion mysql qui est un singleton pour ne pas avoir plusieurs connexion en parallèle. 
+        // Ce n'est pas essentiel dans notre cas, mais cela evite des erreurs.
         private MySqlConnection connection;
+        private static DbLink link=null;
 
-        public DbLink(string server, string user, string password, string dbName, string port)
+        
+        public static DbLink  getInstance(string server, string user, string password, string dbName, string port)
+        {
+            // permet de récupérer une connexion sql ou de la créer si ce n'est pas encore le cas.
+            if (link != null)
+            {
+                link = new DbLink(server, user, password, dbName, port);
+            }
+
+            return link;
+        }
+        
+        private DbLink(string server, string user, string password, string dbName, string port)
         {
             string connStr = "server=" + server + ";user=" + user + ";database=" + dbName + ";port=" + port + ";password=" + password;
             this.connection = new MySqlConnection(connStr);
@@ -24,13 +39,14 @@ namespace keyloggerviewer
         public List<LogData> simpleGet(string hostName = "", string hostPublicIp = "", string hostPrivateIp = "",
             string type = "", int contentMaxLen = 1000, int contentMinLen = 0, string regex = "", int lineBefore = 0,
             int lineAfter = 0, string startDate = "", string endDate = "", string startTime = "", string endTime = "")
+        // Fonction permettant de selectionner seulement certaines données selon différent critère.
         {
             List<LogData> logList = new List<LogData>();
             if (connection.State != ConnectionState.Open)
             {
                 connection.Open();
             }
-
+            // On crée la requête sql et on ajoute tous les paramètres nécessaires.
             string sqlReq = @"SELECT l.hostId, l.logId 
             FROM host as h JOIN log as l ON h.hostId = l.hostId
             WHERE (@hostname = '' OR h.hostName = @hostname) 
@@ -60,16 +76,14 @@ namespace keyloggerviewer
             List<int[]> idCombo = new List<int[]>();
             while (rdr.Read())
             {
-                Console.WriteLine(rdr[0] + " -- " + rdr[1]);
                 int[] a = {int.Parse(rdr[0].ToString()), int.Parse(rdr[1].ToString())};
                 idCombo.Add(a);
             }
 
             rdr.Close();
+            // Seconde requête qui permet pour chaque ligne sélectionnée le nombre de lignes avant et après demandées.
             foreach (int[] i in idCombo)
             {
-                Console.WriteLine(i[0]);
-                Console.WriteLine(i[1]);
                 sqlReq =
                     @"SELECT h.hostName, h.hostPublicIp, h.hostPrivateIp, TIMESTAMP(l.logDate, l.logTime), l.logType, l.content, l.logId
                             FROM host as h JOIN log as l ON h.hostId = l.hostId
@@ -81,8 +95,6 @@ namespace keyloggerviewer
                 MySqlDataReader rdr2 = req.ExecuteReader();
                 while (rdr2.Read())
                 {
-                    Console.WriteLine(rdr2[0] + " -- " + rdr2[1] + " -- " + rdr2[2] + " -- " + rdr2[3] + " -- " +
-                                      rdr2[4] + " -- " + rdr2[5] + " -- " + rdr2[6]);
                     logList.Add(new LogData(rdr2[0].ToString(), rdr2[1].ToString(), rdr2[2].ToString(),
                         DateTime.Parse(rdr2[3].ToString()), rdr2[4].ToString(), rdr2[5].ToString(),
                         int.Parse(rdr2[6].ToString())));
@@ -93,13 +105,13 @@ namespace keyloggerviewer
             }
 
             connection.Close();
-            Console.WriteLine("OK");
 
             return logList;
         }
 
         public List<String> getHostList()
         {
+            // Fonction permettant de récupérer la liste des hotes présent sur la base de donnée.
             if (connection.State != ConnectionState.Open)
             {
                 connection.Open();
@@ -118,8 +130,10 @@ namespace keyloggerviewer
             return names;
         }
 
-        public int insertLogData(Host h)
+
+        public int getHostId(Host h)
         {
+            // Fonction permettant de récupérer l'id myql d'un hote et de l'ajouter à la base de donnée si il n'est pas déjà présent.
             if (connection.State != ConnectionState.Open)
             {
                 connection.Open();
@@ -169,11 +183,26 @@ namespace keyloggerviewer
                 h.SqlId = id;
             }
 
-            sqlReq =
+            connection.Close();
+            return h.SqlId;
+        }
+        
+        public DateTime getLastLogTime(Host h)
+        {
+            // Permet d'obtenir la date et l'heure de dernier log pour un hote donné.
+            if (h.SqlId == -1)
+            {
+                h.SqlId = getHostId(h);
+            }
+            if (connection.State != ConnectionState.Open)
+            {
+                connection.Open();
+            }
+            string sqlReq =
                 @"SELECT logId, TIMESTAMP(logDate, logTime) FROM log WHERE hostId = @hostId AND logId = (SELECT MAX(logId) FROM log WHERE hostId = @hostId);";
-            req = new MySqlCommand(sqlReq, connection);
+            MySqlCommand req = new MySqlCommand(sqlReq, connection);
             req.Parameters.AddWithValue("@hostId", h.SqlId);
-            rdr = req.ExecuteReader();
+            MySqlDataReader rdr = req.ExecuteReader();
             int lastId = 0;
             DateTime lastTime = DateTime.Parse("1/1/1900");
             if (rdr.HasRows)
@@ -186,16 +215,64 @@ namespace keyloggerviewer
                 }
             }
             rdr.Close();
-            h.LogList = h.LogList.Where(x => x.LogDate > lastTime).ToList();
+            connection.Close();
+            return lastTime;
+        }
+        
+        public int getLastLogId(Host h)
+        {
+            // Permet de récupérer l'id du dernier log pour un hote donné.
+            if (h.SqlId == -1)
+            {
+                h.SqlId = getHostId(h);
+            }
+            if (connection.State != ConnectionState.Open)
+            {
+                connection.Open();
+            }
+
+            string sqlReq =
+                @"SELECT logId, TIMESTAMP(logDate, logTime) FROM log WHERE hostId = @hostId AND logId = (SELECT MAX(logId) FROM log WHERE hostId = @hostId);";
+            MySqlCommand req = new MySqlCommand(sqlReq, connection);
+            req.Parameters.AddWithValue("@hostId", h.SqlId);
+            MySqlDataReader rdr = req.ExecuteReader();
+            int lastId = 0;
+            DateTime lastTime = DateTime.Parse("1/1/1900");
+            if (rdr.HasRows)
+            {
+
+                while (rdr.Read())
+                {
+                    lastId = int.Parse(rdr[0].ToString());
+                    lastTime = DateTime.Parse(rdr[1].ToString());
+                }
+            }
+            rdr.Close();
+            connection.Close();
+            return lastId;
+        }
+        
+        public int insertLogData(Host h)
+        {
+            // Insère dans la base de donnée un hote avec l'intégralité des logs associés.
+            if (h.SqlId == -1)
+            {
+                h.SqlId = getHostId(h);
+            }
+            int lastId = getLastLogId(h);
             foreach (Log log in h.LogList)
             {
                 lastId += 1;
                 log.LogId = lastId;
             }
+            if (connection.State != ConnectionState.Open)
+            {
+                connection.Open();
+            }
 
-            sqlReq =
+            string sqlReq =
                 "INSERT INTO log (hostId, logId, logType, logDate, logTime, content) VALUES (@hostId, @logId, @logType, @logDate, @logTime, @content)";
-            req = new MySqlCommand(sqlReq, connection);
+            MySqlCommand req = new MySqlCommand(sqlReq, connection);
             req.Parameters.Add("@hostId", MySqlDbType.Int32);
             req.Parameters.Add("@logId", MySqlDbType.Int32);
             req.Parameters.Add("@logType", MySqlDbType.String);
@@ -213,7 +290,7 @@ namespace keyloggerviewer
                 req.ExecuteNonQuery();
             }
             
-            Console.WriteLine("qsd");
+            connection.Close();
             return 1;
         }
     }

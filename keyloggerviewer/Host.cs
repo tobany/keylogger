@@ -1,8 +1,10 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Net.Http.Headers;
 
 namespace keyloggerviewer
 {
+    //Classe représentant un poste ayant des log lors de l'insertion en base de donnée depuis le serveur ftp
     public class Host
     {
         private string publicIp;
@@ -15,6 +17,7 @@ namespace keyloggerviewer
             this.publicIp = publicIp;
             this.hostName = hostName;
             this.logList = new List<Log>();
+            this.SqlId = -1;
         }
 
         public string PublicIp
@@ -44,7 +47,15 @@ namespace keyloggerviewer
 
         public List<Log> LogList
         {
-            get => logList;
+            get
+            {
+                foreach (Log log in logList)
+                {
+                    log.HostId = sqlId;
+                }
+
+                return logList;
+            }
             set => logList = value;
         }
 

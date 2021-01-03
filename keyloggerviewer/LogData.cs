@@ -2,6 +2,7 @@
 
 namespace keyloggerviewer
 {
+    // Classe représentant les logs pour l'affichage sur le ficher. Possède aussi comme attribut le nom de l'hote pur pouvoir l'afficher.
     [Serializable]
     public class LogData
     {

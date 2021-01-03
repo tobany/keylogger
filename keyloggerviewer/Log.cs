@@ -2,6 +2,7 @@
 
 namespace keyloggerviewer
 {
+    //Classe représentant les logs lors de l'insértion en base de données
     public class Log
     {
         private int hostId;
