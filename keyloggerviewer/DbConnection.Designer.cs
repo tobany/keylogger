@@ -44,6 +44,8 @@ namespace keyloggerviewer
             this.label = new System.Windows.Forms.Label();
             this.button1 = new System.Windows.Forms.Button();
             this.label6 = new System.Windows.Forms.Label();
+            this.cbInit = new System.Windows.Forms.CheckBox();
+            this.label7 = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // label1
@@ -145,16 +147,37 @@ namespace keyloggerviewer
             this.label6.ForeColor = System.Drawing.Color.Red;
             this.label6.Location = new System.Drawing.Point(59, 175);
             this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(495, 40);
+            this.label6.Size = new System.Drawing.Size(608, 40);
             this.label6.TabIndex = 12;
             this.label6.Text = "Connexion impossible ! Veuillez vérifier les informations saisies.";
             this.label6.TextAlign = System.Drawing.ContentAlignment.TopCenter;
+            // 
+            // cbInit
+            // 
+            this.cbInit.Location = new System.Drawing.Point(555, 60);
+            this.cbInit.Name = "cbInit";
+            this.cbInit.Size = new System.Drawing.Size(112, 49);
+            this.cbInit.TabIndex = 13;
+            this.cbInit.Text = "Créer nouvelle base de donnée";
+            this.cbInit.UseVisualStyleBackColor = true;
+            // 
+            // label7
+            // 
+            this.label7.ForeColor = System.Drawing.Color.Red;
+            this.label7.Location = new System.Drawing.Point(44, 199);
+            this.label7.Name = "label7";
+            this.label7.Size = new System.Drawing.Size(622, 16);
+            this.label7.TabIndex = 14;
+            this.label7.Text = "Cette base de donnée existe déjà";
+            this.label7.TextAlign = System.Drawing.ContentAlignment.TopCenter;
             // 
             // DbConnection
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(800, 450);
+            this.Controls.Add(this.label7);
+            this.Controls.Add(this.cbInit);
             this.Controls.Add(this.label6);
             this.Controls.Add(this.button1);
             this.Controls.Add(this.label);
@@ -173,6 +196,10 @@ namespace keyloggerviewer
             this.ResumeLayout(false);
             this.PerformLayout();
         }
+
+        private System.Windows.Forms.Label label7;
+
+        private System.Windows.Forms.CheckBox cbInit;
 
         private System.Windows.Forms.Label label6;
 

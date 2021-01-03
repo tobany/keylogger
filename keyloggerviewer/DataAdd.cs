@@ -15,7 +15,7 @@ namespace keyloggerviewer
         public static string username2 = "";
         public static string password = "";
         public static string ip = "";
-        public static string port = "";
+        public static string port = "21";
         public static string folder = "";
         
         

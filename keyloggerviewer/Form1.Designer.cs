@@ -54,9 +54,8 @@
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.fichierToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.exporterToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.xMLToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
             this.chargerDepuisDtpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
             ((System.ComponentModel.ISupportInitialize) (this.nudBefore)).BeginInit();
             ((System.ComponentModel.ISupportInitialize) (this.nudMaxLen)).BeginInit();
             ((System.ComponentModel.ISupportInitialize) (this.nudMinLen)).BeginInit();
@@ -212,7 +211,6 @@
             this.dataGridView1.ReadOnly = true;
             this.dataGridView1.Size = new System.Drawing.Size(747, 506);
             this.dataGridView1.TabIndex = 24;
-            this.dataGridView1.ColumnHeaderMouseClick += dataGridView1_ColumnHeaderMouseClick;
             // 
             // dtpStartDate
             // 
@@ -259,7 +257,7 @@
             // 
             // fichierToolStripMenuItem
             // 
-            this.fichierToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {this.exporterToolStripMenuItem, this.xMLToolStripMenuItem, this.chargerDepuisDtpToolStripMenuItem});
+            this.fichierToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {this.exporterToolStripMenuItem, this.chargerDepuisDtpToolStripMenuItem});
             this.fichierToolStripMenuItem.Name = "fichierToolStripMenuItem";
             this.fichierToolStripMenuItem.Size = new System.Drawing.Size(54, 20);
             this.fichierToolStripMenuItem.Text = "Fichier";
@@ -270,12 +268,6 @@
             this.exporterToolStripMenuItem.Size = new System.Drawing.Size(172, 22);
             this.exporterToolStripMenuItem.Text = "Exporter";
             this.exporterToolStripMenuItem.Click += new System.EventHandler(this.exporterToolStripMenuItem_Click);
-            // 
-            // xMLToolStripMenuItem
-            // 
-            this.xMLToolStripMenuItem.Name = "xMLToolStripMenuItem";
-            this.xMLToolStripMenuItem.Size = new System.Drawing.Size(172, 22);
-            this.xMLToolStripMenuItem.Text = "XML";
             // 
             // chargerDepuisDtpToolStripMenuItem
             // 
@@ -327,8 +319,6 @@
         }
 
         private System.Windows.Forms.ToolStripMenuItem chargerDepuisDtpToolStripMenuItem;
-
-        private System.Windows.Forms.ToolStripMenuItem xMLToolStripMenuItem;
 
         private System.Windows.Forms.ToolStripMenuItem exporterToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem fichierToolStripMenuItem;
