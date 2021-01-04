@@ -161,9 +161,10 @@ COMMIT;";
             foreach (int[] i in idCombo)
             {
                 sqlReq =
-                    @"SELECT h.hostName, l.application, h.hostPrivateIp, TIMESTAMP(l.logDate, l.logTime), l.logType, l.content, l.logId
+                    @"SELECT h.hostName, l.application, h.hostPublicIp, TIMESTAMP(l.logDate, l.logTime), l.logType, l.content, l.logId
                             FROM host as h JOIN log as l ON h.hostId = l.hostId
                             WHERE (l.logId <= @maxLog) AND (l.logId >= @minLog) AND (l.hostId=@hostId)";
+                
                 req = new MySqlCommand(sqlReq, connection);
                 req.Parameters.AddWithValue("@hostId", i[0]);
                 req.Parameters.AddWithValue("@minLog", i[1] - lineBefore);
@@ -370,6 +371,46 @@ COMMIT;";
             
             connection.Close();
             return 1;
+        }
+
+        public void deleteLog(List<LogData> logs)
+        {
+            Console.WriteLine("totot");
+            Dictionary<string, List<int>> del = new Dictionary<string, List<int>>();
+            foreach (LogData log in logs)
+            {
+                if (!del.ContainsKey(log.HostName))
+                {
+                    del.Add(log.HostName, new List<int>());
+                    del[log.HostName].Add(log.LogId);
+                }
+                else
+                {
+                    del[log.HostName].Add(log.LogId);
+                }
+            }
+            
+            if (connection.State != ConnectionState.Open)
+            {
+                connection.Open();
+            }
+
+            MySqlCommand req;
+            string sqlReq;
+            string idLog;
+            foreach (string name in del.Keys)
+            {
+                Console.WriteLine(string.Join(",", del[name]));
+                Console.WriteLine(name);
+                idLog = "(" + string.Join(",", del[name]) + ")";
+                sqlReq =
+                    @"DELETE FROM log WHERE logId in " + idLog + @"AND hostId = (SELECT hostId FROM host WHERE hostName=@name);";
+                req = new MySqlCommand(sqlReq, connection);
+                req.Parameters.AddWithValue("@name", name);
+                req.ExecuteNonQuery();
+            }
+            connection.Close();
+            
         }
     }
 }

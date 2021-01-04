@@ -8,7 +8,7 @@ namespace keyloggerviewer
     {
         private string hostName;
         private string appWindow;
-        private string privateIp;
+        private string publicIp;
         private DateTime date;
         private string type;
         private string content;
@@ -32,10 +32,10 @@ namespace keyloggerviewer
             set => appWindow = value;
         }
 
-        public string PrivateIp
+        public string PublicIp
         {
-            get => privateIp;
-            set => privateIp = value;
+            get => publicIp;
+            set => publicIp = value;
         }
 
         public DateTime Date
@@ -56,11 +56,11 @@ namespace keyloggerviewer
             set => content = value;
         }
 
-        public LogData(string hostName, string appWindow, string privateIp, DateTime date, string type, string content, int logId)
+        public LogData(string hostName, string appWindow, string publicIp, DateTime date, string type, string content, int logId)
         {
             this.hostName = hostName;
             this.appWindow = appWindow;
-            this.privateIp = privateIp;
+            this.publicIp = publicIp;
             this.date = date;
             this.type = type;
             this.content = content;
@@ -69,7 +69,7 @@ namespace keyloggerviewer
 
         public override string ToString()
         {
-            return this.hostName + ", " + this.logId + ", " + this.privateIp + ", " + this.appWindow + ", " + this.date +
+            return this.hostName + ", " + this.logId + ", " + this.publicIp + ", " + this.appWindow + ", " + this.date +
                    ", " + this.type + ", " + this.content;
         }
     }

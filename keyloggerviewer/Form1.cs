@@ -20,12 +20,13 @@ namespace keyloggerviewer
         private List<LogData> logs;
         private string sortedColumn;
         private bool ascendSort;
+
         public Form1()
         {
             InitializeComponent();
             //Creation de la fenêtre pour récupérer les informations de connexion sql
             DbConnection dbWindow = new DbConnection();
-            dbWindow.ShowDialog(); 
+            dbWindow.ShowDialog();
             //Si jamais l'utilisateur ferme la fenêtre sans valider, on vérifie qu'il veut bien quitter, si c'est le cas, on arrête l'application.
             while (Program.connection is null)
             {
@@ -48,6 +49,7 @@ namespace keyloggerviewer
                     dbWindow.ShowDialog();
                 }
             }
+
             this.db = Program.connection;
             //On récupère la liste des poste présent sur la base de donnée pour les mettre dans la liste déroulante
             List<string> names = db.getHostList();
@@ -66,6 +68,7 @@ namespace keyloggerviewer
             cbType.Items.Add(("paste"));
             cbType.Items.Add(("click"));
             cbType.Items.Add(("shortcut"));
+            cbType.Items.Add(("keypress"));
             cbType.SelectedIndex = 0;
             cbType.DropDownStyle = ComboBoxStyle.DropDownList;
             logs = new List<LogData>();
@@ -104,6 +107,7 @@ namespace keyloggerviewer
                 startTime = dtpStartTime.Text;
                 endTime = dtpEndTime.Text;
             }
+
             if (cbDate.Checked)
             {
                 startDate = dtpStartDate.Value.ToString("yyyy-MM-dd");
@@ -119,26 +123,28 @@ namespace keyloggerviewer
             {
                 logType = "";
             }
+
             //On execute la requête et on insère dans la datagridview les valeurs récupérées
             this.logs = db.simpleGet(hostName: hostName, type: logType, regex: regex, lineAfter: nbLineAfter,
                 lineBefore: nbLineBefore, contentMaxLen: contentMaxLen, contentMinLen: contentMinLen, endDate: endDate,
                 startDate: startDate, endTime: endTime, startTime: startTime);
-            List<LogData> ld = this.logs.OrderBy(o => o.HostName).ThenBy(o => o.LogId).ToList();;
+            List<LogData> ld = this.logs.OrderBy(o => o.HostName).ThenBy(o => o.LogId).ToList();
+            ;
             dataGridView1.DataSource = ld;
             dataGridView1.Update();
             dataGridView1.Refresh();
             sortedColumn = "HostName";
             dataGridView1.Columns[1].HeaderCell.SortGlyphDirection = SortOrder.Ascending;
-            
-            
-            
+
+
+
 
 
         }
 
         private void dataGridView1_ColumnHeaderMouseClick(
-            object sender, DataGridViewCellMouseEventArgs e)
-        // Fonction permettant de trier les données selon certaines colonnes lors du click sur les en tête de colonnes.
+                object sender, DataGridViewCellMouseEventArgs e)
+            // Fonction permettant de trier les données selon certaines colonnes lors du click sur les en tête de colonnes.
         {
             List<LogData> ld = this.logs;
             DataGridViewColumn newColumn = dataGridView1.Columns[e.ColumnIndex];
@@ -169,6 +175,7 @@ namespace keyloggerviewer
                         ok = true;
                         break;
                 }
+
                 ascendSort = false;
                 newColumn.HeaderCell.SortGlyphDirection = SortOrder.Descending;
             }
@@ -199,7 +206,7 @@ namespace keyloggerviewer
                 if (ok)
                 {
                     ascendSort = true;
-                    
+
                 }
 
             }
@@ -245,7 +252,7 @@ namespace keyloggerviewer
         }
 
         private void exporterToolStripMenuItem_Click(object sender, EventArgs e)
-        // Fonction permettant d'exporter les données afficher dans un fichier texte.
+            // Fonction permettant d'exporter les données afficher dans un fichier texte.
         {
             if (this.logs.Count > 0)
             {
@@ -267,16 +274,43 @@ namespace keyloggerviewer
                         sw.Dispose();
                     }
                 }
+
                 saveFileDialog1.Dispose();
             }
         }
 
         private void chargerDepuisDtpToolStripMenuItem_Click(object sender, EventArgs e)
-        // Foncction pour charger les données depuis le server ftp.
+            // Foncction pour charger les données depuis le server ftp.
         {
             FtpConnection ftpWindow = new FtpConnection();
-            
-            ftpWindow.ShowDialog(); 
+
+            ftpWindow.ShowDialog();
+        }
+
+        private void bDelete_Click(object sender, EventArgs e)
+        {
+            List<LogData> logs = new List<LogData>();
+            LogData log;
+            for (int index = 0; index < dataGridView1.SelectedRows.Count; index++)
+            {
+                var selectedRow = dataGridView1.SelectedRows[index];
+                log = (LogData) selectedRow.DataBoundItem;
+                Console.WriteLine(log);
+                logs.Add(log);
+            }
+
+            Console.WriteLine(logs.Count);
+            Console.WriteLine(logs[0]);
+            if (logs.Count != 0)
+            {
+                var result = MessageBox.Show("Voulez vous vraiment supprimer ces lignes de la base de donnée (définitif)", "Confirmation", MessageBoxButtons.YesNo);
+                if (result == System.Windows.Forms.DialogResult.Yes)
+                {
+                    db.deleteLog(logs);
+                    bValidate_Click(sender, e);
+                }
+            }
+
         }
     }
 }
