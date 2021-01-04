@@ -56,6 +56,7 @@
             this.exporterToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.chargerDepuisDtpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
+            this.bDelete = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize) (this.nudBefore)).BeginInit();
             ((System.ComponentModel.ISupportInitialize) (this.nudMaxLen)).BeginInit();
             ((System.ComponentModel.ISupportInitialize) (this.nudMinLen)).BeginInit();
@@ -209,7 +210,7 @@
             this.dataGridView1.Location = new System.Drawing.Point(86, 231);
             this.dataGridView1.Name = "dataGridView1";
             this.dataGridView1.ReadOnly = true;
-            this.dataGridView1.Size = new System.Drawing.Size(747, 506);
+            this.dataGridView1.Size = new System.Drawing.Size(747, 489);
             this.dataGridView1.TabIndex = 24;
             // 
             // dtpStartDate
@@ -276,11 +277,23 @@
             this.chargerDepuisDtpToolStripMenuItem.Text = "Charger depuis ftp";
             this.chargerDepuisDtpToolStripMenuItem.Click += new System.EventHandler(this.chargerDepuisDtpToolStripMenuItem_Click);
             // 
+            // bDelete
+            // 
+            this.bDelete.Anchor = ((System.Windows.Forms.AnchorStyles) ((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.bDelete.Location = new System.Drawing.Point(663, 732);
+            this.bDelete.Name = "bDelete";
+            this.bDelete.Size = new System.Drawing.Size(170, 28);
+            this.bDelete.TabIndex = 30;
+            this.bDelete.Text = "Supprimer";
+            this.bDelete.UseVisualStyleBackColor = true;
+            this.bDelete.Click += new System.EventHandler(this.bDelete_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(940, 762);
+            this.ClientSize = new System.Drawing.Size(940, 772);
+            this.Controls.Add(this.bDelete);
             this.Controls.Add(this.cbDate);
             this.Controls.Add(this.cbTime);
             this.Controls.Add(this.dtpEndDate);
@@ -317,6 +330,8 @@
             this.ResumeLayout(false);
             this.PerformLayout();
         }
+
+        private System.Windows.Forms.Button bDelete;
 
         private System.Windows.Forms.ToolStripMenuItem chargerDepuisDtpToolStripMenuItem;
 

