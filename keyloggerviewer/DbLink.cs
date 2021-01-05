@@ -112,7 +112,7 @@ COMMIT;";
             this.connection.Close();
         }
 
-        public List<LogData> simpleGet(string hostName = "", string hostPublicIp = "", string hostPrivateIp = "",
+        public List<LogData> getData(string hostName = "", string hostPublicIp = "", string hostPrivateIp = "",
             string type = "", int contentMaxLen = 1000, int contentMinLen = 0, string regex = "", int lineBefore = 0,
             int lineAfter = 0, string startDate = "", string endDate = "", string startTime = "", string endTime = "")
         // Fonction permettant de selectionner seulement certaines données selon différent critère.

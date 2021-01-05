@@ -125,7 +125,7 @@ namespace keyloggerviewer
             }
 
             //On execute la requête et on insère dans la datagridview les valeurs récupérées
-            this.logs = db.simpleGet(hostName: hostName, type: logType, regex: regex, lineAfter: nbLineAfter,
+            this.logs = db.getData(hostName: hostName, type: logType, regex: regex, lineAfter: nbLineAfter,
                 lineBefore: nbLineBefore, contentMaxLen: contentMaxLen, contentMinLen: contentMinLen, endDate: endDate,
                 startDate: startDate, endTime: endTime, startTime: startTime);
             List<LogData> ld = this.logs.OrderBy(o => o.HostName).ThenBy(o => o.LogId).ToList();

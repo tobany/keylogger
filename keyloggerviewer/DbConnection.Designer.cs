@@ -91,6 +91,7 @@ namespace keyloggerviewer
             this.tbPassword.Name = "tbPassword";
             this.tbPassword.Size = new System.Drawing.Size(124, 20);
             this.tbPassword.TabIndex = 5;
+            this.tbPassword.UseSystemPasswordChar = true;
             // 
             // label2
             // 
