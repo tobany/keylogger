@@ -10,7 +10,7 @@ namespace MyKeyLogger
 	{
 		public OperationKey()
 		{
-			InitializeComponent();
+			//InitializeComponent();
 		}
 	
 		[DllImport("user32.dll")]  
@@ -20,7 +20,8 @@ namespace MyKeyLogger
         public static void TurnOFFCapsLockKey()
         {  
         	// Contrôle si la touche clavier CAPITAL est activée
-			if (Control.IsKeyLocked(System.Windows.Forms.Keys.CapsLock))
+        	// https://docs.microsoft.com/fr-fr/dotnet/api/system.windows.forms.control.iskeylocked?view=net-5.0
+			if (Control.IsKeyLocked(Keys.CapsLock))
             {  
 				// https://docs.microsoft.com/en-us/windows/win32/inputdev/virtual-key-codes
             	const byte VK_CAPITAL = 0x14; //Code hexadecimal de la touche clavier [Ver.Maj]
@@ -31,9 +32,8 @@ namespace MyKeyLogger
                 /*
                 * https://docs.microsoft.com/fr-fr/windows/win32/inputdev/about-keyboard-input?redirectedfrom=MSDN#scan_code
 				* Le paramètre bScan est la valeur que le clavier génère lorsque l'utilisateur appuie sur une touche.
- 				* Il s'agit d'une valeur dépendante du périphérique qui identifie la touche enfoncée, par opposition au caractère représenté par la touche. 
-				* Une application ignore généralement les codes de scan. 
-				* Au lieu de cela, il utilise les codes de touche virtuelle indépendants du périphérique pour interpréter les messages de frappe.
+ 				* Il s'agit d'une valeur dépendante du périphérique qui identifie la touche enfoncée, est non le caractère représenté par la touche. 
+				* Une application ignore généralement les codes de scan. Elle utilise les codes de touche virtuelle indépendants du périphérique pour interpréter le caractère.
 				*/
                 
                 // Simule un appui sur la touche CAPITAL

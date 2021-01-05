@@ -2,7 +2,7 @@
 using System.Drawing;
 using System.Windows.Forms;
 using System.Runtime.InteropServices;
-using System.Text;
+using System.Text; 
 
 namespace MyKeyLogger
 {
@@ -13,30 +13,29 @@ namespace MyKeyLogger
 			InitializeComponent();
 		}
 		
-		// Declare external functions.
+		// Utilise DllImport pour importer la fonction Win32 GetForegroundWindow
 	    [DllImport("user32.dll")]
 	    private static extern IntPtr GetForegroundWindow();
-	
+	    
+	    // Utilise DllImport pour importer la fonction Win32 GetWindowText
 	    [DllImport("user32.dll")]
 	    private static extern int GetWindowText(IntPtr hWnd, StringBuilder text, int count);
 	    
-	    public static string NomDeLaFenetre() {
-	        
+	    // retourne le nom de la fenêtre windows active
+	    public static string ActiveWindowName() {
+	           	
+	    	// Fixe la capacité du StringBulder à 256 caractères
 	    	int chars = 256;
-	        StringBuilder buff = new StringBuilder(chars);
+	    	
+	    	// Crée un StringBuilder qui s'attend à contenir 256 caractères maximum
+	    	StringBuilder buffer = new StringBuilder(chars);
 	
-	        // Obtain the handle of the active window.
+	        // La fonction GetForegroundWindow renvoie un handle de la fenêtre avec laquelle l'utilisateur travaille actuellement
 	        IntPtr handle = GetForegroundWindow();
 
-	        // Update the controls.
-	        if (GetWindowText(handle, buff, chars) > 0)
-	        {
-	        	return buff.ToString();            
-	        }
-	        else
-	        {
-	        	return ("NO Windows Active");
-	        }
+	        // La fonction GetWindowText copie le texte de la barre de titre de la fenêtre spécifiée, si elle en a une, dans un tampon (buffer)
+	        return GetWindowText(handle, buffer, chars) > 0 ? buffer.ToString() : "No active window";
+		
 	    }
 	}
 }

