@@ -14,6 +14,7 @@ namespace keyloggerviewer
             tbPort.Text = DataAdd.port;
             tbUser.Text = DataAdd.username2;
             tbPassword.Text = DataAdd.password;
+            tbFolder.Text = DataAdd.folder;
             label4.Visible = false;
         }
 
@@ -25,7 +26,7 @@ namespace keyloggerviewer
             string username = tbUser.Text;
             string pwd = tbPassword.Text;
             string folder = tbFolder.Text;
-            if (DataAdd.checkConnection(ip, port, username, pwd, ""))
+            if (DataAdd.checkConnection(ip, port, username, pwd, folder))
             {
                 DataAdd.loadData();
                 this.Close();

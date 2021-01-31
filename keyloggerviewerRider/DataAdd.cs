@@ -23,6 +23,10 @@ namespace keyloggerviewer
         //Fonction pour vérifier la connexion au serveur ftp et contrôler les données saisies par l'utilisateur.
         {
             string url = "ftp://" + serverIp + ":" + serverPort + "/" + folder;
+            if (folder != "")
+            {
+                url += "/";
+            }
             try
             {
                 FtpWebRequest request = (FtpWebRequest)WebRequest.Create(url);

