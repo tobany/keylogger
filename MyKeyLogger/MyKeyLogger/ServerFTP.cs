@@ -7,15 +7,15 @@ namespace MyKeyLogger
 {
 	public class ServerFTP
 	{
-		public const string IP = "86.207.198.22";
+		public const string IP = "";
 
-		public const string PORT = "9080";
+		public const string PORT = "";
 		
 		public const string SERVER = IP + ":" + PORT + "/files";
 
-		public const string USERNAME = "keylogger";
+		public const string USERNAME = "";
 
-		public const string PASSWORD = "keylogger";
+		public const string PASSWORD = "";
 		// Constructeur par defaut, il y a rien dedans
 		public ServerFTP(){}
 		
